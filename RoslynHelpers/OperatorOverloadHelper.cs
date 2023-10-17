@@ -35,7 +35,9 @@ public static class OperatorOverloadHelper
     /// <returns><see langword="true"/> if <paramref name="expressionType"/> is overloading the == operator; otherwise, <see langword="false"/>.</returns>
     public static bool IsOverloadingEqualsOperator(this ITypeSymbol expressionType, SyntaxNodeAnalysisContext context)
     {
-        foreach (var Symbol in expressionType.GetMembers())
+        var Symbols = expressionType.GetMembers();
+
+        foreach (var Symbol in Symbols)
             if (!Symbol.IsImplicitlyDeclared && Symbol.IsOperatorOverload(context, SyntaxKind.EqualsEqualsToken))
                 return true;
 

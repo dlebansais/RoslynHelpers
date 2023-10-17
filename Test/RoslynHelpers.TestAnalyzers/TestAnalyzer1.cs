@@ -40,6 +40,9 @@ public class TestAnalyzer1 : DiagnosticAnalyzer
         if (BinaryExpression.Left.IsEqualsOperatorOverloadedInType(context, referenceTypeOnly: true))
             return;
 
+        if (BinaryExpression.Left.IsEqualsOperatorOverloadedInType(context, referenceTypeOnly: false))
+            return;
+
         context.ReportDiagnostic(Diagnostic.Create(Rule, context.Node.GetLocation(), "*Diagnostic*"));
     }
 }

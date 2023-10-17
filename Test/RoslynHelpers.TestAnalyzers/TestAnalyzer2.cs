@@ -39,6 +39,9 @@ public class TestAnalyzer2 : DiagnosticAnalyzer
         if (BinaryExpression.Left.IsExclamationEqualsOperatorOverloadedInType(context, referenceTypeOnly: true))
             return;
 
+        if (BinaryExpression.Left.IsExclamationEqualsOperatorOverloadedInType(context, referenceTypeOnly: false))
+            return;
+
         context.ReportDiagnostic(Diagnostic.Create(Rule, context.Node.GetLocation(), "*Diagnostic*"));
     }
 }
