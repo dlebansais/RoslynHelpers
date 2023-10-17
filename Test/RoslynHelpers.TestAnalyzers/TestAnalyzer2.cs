@@ -29,7 +29,7 @@ public class TestAnalyzer2 : DiagnosticAnalyzer
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
         context.EnableConcurrentExecution();
 
-        context.RegisterSyntaxNodeAction(AnalyzeNode, SyntaxKind.EqualsExpression);
+        context.RegisterSyntaxNodeAction(AnalyzeNode, SyntaxKind.NotEqualsExpression);
     }
 
     private void AnalyzeNode(SyntaxNodeAnalysisContext context)
