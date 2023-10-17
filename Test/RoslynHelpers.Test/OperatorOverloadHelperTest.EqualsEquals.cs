@@ -26,4 +26,39 @@ class Program
 }
 ");
     }
+
+    [TestMethod]
+    public async Task EqualsEqualsOperator_NoDiagnostic()
+    {
+        await VerifyCS.VerifyAnalyzerAsync(@"
+#nullable enable
+
+using System;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        Foo? x = args.Length > 0 ? null : new();
+
+        if (x == null)
+            Console.WriteLine(string.Empty);
+    }
+}
+
+class Foo
+{
+    public static bool operator ==(Foo? foo1, Foo? foo2)
+    {
+        if (object.Equals(foo2, null)) throw new Exception(""oops"");
+            return object.Equals(foo1, foo2);
+    }
+    public static bool operator !=(Foo? foo1, Foo? foo2)
+    {
+        if (object.Equals(foo2, null)) throw new Exception(""oops"");
+            return !object.Equals(foo1, foo2);
+    }
+}
+");
+    }
 }
