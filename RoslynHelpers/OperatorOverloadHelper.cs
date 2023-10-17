@@ -1,4 +1,4 @@
-﻿namespace CSharpLatest;
+﻿namespace RoslynHelpers;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
