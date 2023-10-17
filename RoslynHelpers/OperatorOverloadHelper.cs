@@ -19,9 +19,10 @@ public static class OperatorOverloadHelper
     /// <returns><see langword="true"/> if the type of <paramref name="expression"/> is overloading the == operator; otherwise, <see langword="false"/>.</returns>
     public static bool IsEqualsOperatorOverloadedInType(this ExpressionSyntax expression, SyntaxNodeAnalysisContext context, bool referenceTypeOnly = false)
     {
-        ITypeSymbol? ExpressionType = context.SemanticModel.GetTypeInfo(expression, context.CancellationToken).Type;
+        TypeInfo ExpressionTypeInfo = context.SemanticModel.GetTypeInfo(expression, context.CancellationToken);
+        ITypeSymbol? ExpressionType = ExpressionTypeInfo.Type;
 
-        if (ExpressionType is not null && (!referenceTypeOnly || ExpressionType.IsReferenceType))
+        if (ExpressionType is INamedTypeSymbol && (!referenceTypeOnly || ExpressionType.IsReferenceType))
             return ExpressionType.IsOverloadingEqualsOperator(context);
 
         return false;
@@ -53,9 +54,10 @@ public static class OperatorOverloadHelper
     /// <returns><see langword="true"/> if the type of <paramref name="expression"/> is overloading the != operator; otherwise, <see langword="false"/>.</returns>
     public static bool IsExclamationEqualsOperatorOverloadedInType(this ExpressionSyntax expression, SyntaxNodeAnalysisContext context, bool referenceTypeOnly = false)
     {
-        ITypeSymbol? ExpressionType = context.SemanticModel.GetTypeInfo(expression, context.CancellationToken).Type;
+        TypeInfo ExpressionTypeInfo = context.SemanticModel.GetTypeInfo(expression, context.CancellationToken);
+        ITypeSymbol? ExpressionType = ExpressionTypeInfo.Type;
 
-        if (ExpressionType is not null && (!referenceTypeOnly || ExpressionType.IsReferenceType))
+        if (ExpressionType is INamedTypeSymbol && (!referenceTypeOnly || ExpressionType.IsReferenceType))
             return ExpressionType.IsOverloadingExclamationEqualsOperator(context);
 
         return false;
