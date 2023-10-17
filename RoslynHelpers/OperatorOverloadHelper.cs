@@ -22,7 +22,7 @@ public static class OperatorOverloadHelper
         TypeInfo ExpressionTypeInfo = context.SemanticModel.GetTypeInfo(expression, context.CancellationToken);
         ITypeSymbol? ExpressionType = ExpressionTypeInfo.Type;
 
-        if (ExpressionType is INamedTypeSymbol && (!referenceTypeOnly || ExpressionType.IsReferenceType))
+        if (ExpressionType is INamedTypeSymbol && ExpressionType is not IErrorTypeSymbol && (!referenceTypeOnly || ExpressionType.IsReferenceType))
             return ExpressionType.IsOverloadingEqualsOperator(context);
 
         return false;
@@ -57,7 +57,7 @@ public static class OperatorOverloadHelper
         TypeInfo ExpressionTypeInfo = context.SemanticModel.GetTypeInfo(expression, context.CancellationToken);
         ITypeSymbol? ExpressionType = ExpressionTypeInfo.Type;
 
-        if (ExpressionType is INamedTypeSymbol && (!referenceTypeOnly || ExpressionType.IsReferenceType))
+        if (ExpressionType is INamedTypeSymbol && ExpressionType is not IErrorTypeSymbol && (!referenceTypeOnly || ExpressionType.IsReferenceType))
             return ExpressionType.IsOverloadingExclamationEqualsOperator(context);
 
         return false;

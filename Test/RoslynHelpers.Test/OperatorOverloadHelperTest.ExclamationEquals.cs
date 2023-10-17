@@ -139,4 +139,25 @@ class Program
 }
 ", DiagnosticResult.CompilerError("CS0103").WithSpan(10, 13, 10, 14).WithArguments("x"));
     }
+
+    [TestMethod]
+    public async Task ArrayExclamationEqualsOperator_Diagnostic()
+    {
+        await VerifyCS.VerifyAnalyzerAsync(@"
+#nullable enable
+
+using System;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        string[]? s = args.Length > 0 ? null : new string[] { ""test"" };
+
+        if ([|s != null|])
+            Console.WriteLine(string.Empty);
+    }
+}
+");
+    }
 }
