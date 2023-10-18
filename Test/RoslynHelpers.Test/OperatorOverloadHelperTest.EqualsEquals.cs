@@ -1,10 +1,8 @@
 ﻿namespace RoslynHelpers.Test;
 
 using System.Threading.Tasks;
-using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RoslynHelpers.TestAnalyzers;
 using VerifyCS = CSharpLatest.Test.CSharpAnalyzerVerifier<TestAnalyzers.TestAnalyzer1>;
 
 public partial class OperatorOverloadHelperTest
@@ -51,11 +49,16 @@ class Program
 
 class Foo
 {
+    public static void Other()
+    {
+    }
+
     public static bool operator ==(Foo? foo1, Foo? foo2)
     {
         if (object.Equals(foo2, null)) throw new Exception(""oops"");
             return object.Equals(foo1, foo2);
     }
+
     public static bool operator !=(Foo? foo1, Foo? foo2)
     {
         if (object.Equals(foo2, null)) throw new Exception(""oops"");
