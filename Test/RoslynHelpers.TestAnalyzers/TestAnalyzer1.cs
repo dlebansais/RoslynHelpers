@@ -37,10 +37,12 @@ public class TestAnalyzer1 : DiagnosticAnalyzer
     {
         var BinaryExpression = (BinaryExpressionSyntax)context.Node;
 
-        if (BinaryExpression.Left.IsEqualsOperatorOverloadedInType(context, referenceTypeOnly: true))
+        ITypeSymbol? ExpressionType = BinaryExpression.Left.GetExpressionValidType(context);
+
+        if (ExpressionType is null)
             return;
 
-        if (BinaryExpression.Left.IsEqualsOperatorOverloadedInType(context, referenceTypeOnly: false))
+        if (ExpressionType.IsOverloadingEqualsOperator(context))
             return;
 
         context.ReportDiagnostic(Diagnostic.Create(Rule, context.Node.GetLocation(), "*Diagnostic*"));

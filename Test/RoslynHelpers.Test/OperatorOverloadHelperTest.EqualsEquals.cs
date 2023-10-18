@@ -138,7 +138,7 @@ class Program
 {
     static void Main(string[] args)
     {
-        if ([|x == null|])
+        if (x == null)
             Console.WriteLine(string.Empty);
     }
 }
