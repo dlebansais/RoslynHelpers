@@ -44,6 +44,9 @@ public class TestAnalyzer2 : DiagnosticAnalyzer
         if (ExpressionType.IsOverloadingExclamationEqualsOperator(context))
             return;
 
+        if (!ExpressionType.IsReferenceType && ExpressionType.NullableAnnotation != NullableAnnotation.Annotated)
+            return;
+
         context.ReportDiagnostic(Diagnostic.Create(Rule, context.Node.GetLocation(), "*Diagnostic*"));
     }
 }

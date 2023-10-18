@@ -1,5 +1,6 @@
 ﻿namespace RoslynHelpers;
 
+using System.Diagnostics;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -37,6 +38,18 @@ public static class OperatorOverloadHelper
     /// <returns><see langword="true"/> if <paramref name="typeSymbol"/> is overloading the <paramref name="operatorKind"/> operator; otherwise, <see langword="false"/>.</returns>
     private static bool IsOverloadingEqualsOperator(this ITypeSymbol typeSymbol, SyntaxNodeAnalysisContext context, SyntaxKind operatorKind)
     {
+        // If the type is a nullable struct.
+        if (!typeSymbol.IsReferenceType && typeSymbol.NullableAnnotation == NullableAnnotation.Annotated)
+        {
+            INamedTypeSymbol NamedTypeSymbol = (INamedTypeSymbol)typeSymbol;
+            var OriginalDefinition = NamedTypeSymbol.OriginalDefinition;
+
+            Debug.Assert(OriginalDefinition is not null && OriginalDefinition.SpecialType == SpecialType.System_Nullable_T);
+
+            // Get the original struct type. This is the type to inspect for overloaded operators.
+            typeSymbol = NamedTypeSymbol.TypeArguments[0];
+        }
+
         var Symbols = typeSymbol.GetMembers();
 
         foreach (var Symbol in Symbols)

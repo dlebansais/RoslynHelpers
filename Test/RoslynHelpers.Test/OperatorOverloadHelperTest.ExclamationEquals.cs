@@ -53,13 +53,13 @@ class Foo
     {
     }
 
-    public static bool operator ==(Foo? foo1, Foo? foo2)
+    public static bool operator==(Foo? foo1, Foo? foo2)
     {
         if (object.Equals(foo2, null)) throw new Exception(""oops"");
             return object.Equals(foo1, foo2);
     }
 
-    public static bool operator !=(Foo? foo1, Foo? foo2)
+    public static bool operator!=(Foo? foo1, Foo? foo2)
     {
         if (object.Equals(foo2, null)) throw new Exception(""oops"");
             return !object.Equals(foo1, foo2);
@@ -69,7 +69,7 @@ class Foo
     }
 
     [TestMethod]
-    public async Task StructExclamationEqualsOperator_Diagnostic()
+    public async Task NullableStructExclamationEqualsOperator_NoDiagnostic()
     {
         await VerifyCS.VerifyAnalyzerAsync(@"
 #nullable enable
@@ -82,25 +82,51 @@ class Program
     {
         Foo? x = args.Length > 0 ? null : new();
 
-        if ([|x != null|])
+        if (x != null)
             Console.WriteLine(string.Empty);
     }
 }
 
 struct Foo
 {
-    public static bool operator ==(Foo? foo1, Foo? foo2)
+    public static bool operator==(Foo foo1, Foo foo2)
     {
         if (object.Equals(foo2, null)) throw new Exception(""oops"");
             return object.Equals(foo1, foo2);
     }
-    public static bool operator !=(Foo? foo1, Foo? foo2)
+
+    public static bool operator!=(Foo foo1, Foo foo2)
     {
         if (object.Equals(foo2, null)) throw new Exception(""oops"");
             return !object.Equals(foo1, foo2);
     }
 }
 ");
+    }
+
+    [TestMethod]
+    public async Task StructExclamationEqualsOperator_NoDiagnostic()
+    {
+        await VerifyCS.VerifyAnalyzerAsync(@"
+#nullable enable
+
+using System;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        Foo x;
+
+        if (x != null)
+            Console.WriteLine(string.Empty);
+    }
+}
+
+struct Foo
+{
+}
+", DiagnosticResult.CompilerError("CS0019").WithSpan(12, 13, 12, 22).WithArguments("!=", "Foo", "<null>"));
     }
 
     [TestMethod]
@@ -115,7 +141,7 @@ class Program
 {
     static void Main(string[] args)
     {
-        if ([|Test() != null|])
+        if (Test() != null)
             Console.WriteLine(string.Empty);
     }
 
