@@ -44,7 +44,8 @@ public static class OperatorOverloadHelper
             INamedTypeSymbol NamedTypeSymbol = (INamedTypeSymbol)typeSymbol;
             var OriginalDefinition = NamedTypeSymbol.OriginalDefinition;
 
-            Debug.Assert(OriginalDefinition is not null && OriginalDefinition.SpecialType == SpecialType.System_Nullable_T);
+            Debug.Assert(OriginalDefinition is not null);
+            Debug.Assert(OriginalDefinition!.SpecialType == SpecialType.System_Nullable_T);
 
             // Get the original struct type. This is the type to inspect for overloaded operators.
             typeSymbol = NamedTypeSymbol.TypeArguments[0];
