@@ -58,8 +58,8 @@ after_build:
   - ps: $env:VERSION_NUMBER=$version_number
   - ps: $env:VERSION_TAG=$version_tag
   - echo Version is "%VERSION_TAG%"
-  - echo if exist "%APPVEYOR_PROJECT_NAME%%VERSION_TAG%.nupkg" ren "%APPVEYOR_PROJECT_NAME%%VERSION_TAG%.nupkg" "%PACKAGE_PREFIX%.%APPVEYOR_PROJECT_NAME%%VERSION_TAG%.nupkg"
-  - echo if exist "%APPVEYOR_PROJECT_NAME%-Debug%VERSION_TAG%.nupkg" ren "%APPVEYOR_PROJECT_NAME%-Debug%VERSION_TAG%.nupkg" "%PACKAGE_PREFIX%.%APPVEYOR_PROJECT_NAME%-Debug%VERSION_TAG%.nupkg"
+  - if exist "%APPVEYOR_PROJECT_NAME%%VERSION_NUMBER%.nupkg" ren "%APPVEYOR_PROJECT_NAME%%VERSION_NUMBER%.nupkg" "%PACKAGE_PREFIX%.%APPVEYOR_PROJECT_NAME%%VERSION_NUMBER%.nupkg"
+  - if exist "%APPVEYOR_PROJECT_NAME%-Debug%VERSION_NUMBER%.nupkg" ren "%APPVEYOR_PROJECT_NAME%-Debug%VERSION_NUMBER%.nupkg" "%PACKAGE_PREFIX%.%APPVEYOR_PROJECT_NAME%-Debug%VERSION_NUMBER%.nupkg"
 
 before_test:
   - nuget install OpenCover -Version %opencover_version% -OutputDirectory packages
