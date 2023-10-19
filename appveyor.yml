@@ -52,15 +52,14 @@ after_build:
   - ps: |-
         $xml = [xml](Get-Content .\$env:APPVEYOR_PROJECT_NAME\$env:APPVEYOR_PROJECT_NAME.csproj)
   - ps: $version=$xml.Project.PropertyGroup.Version
-  - ps: set version_number $version
   - ps: set version_tag v$version
   - ps: $version_tag=$version_tag.Trim()
-  - ps: $version_number=$version_number.Trim()
+  - ps: $version_number=version_tag.Replace('v', '.')
   - ps: $env:VERSION_TAG=$version_tag
   - echo Version is "%VERSION_TAG%"
   - dir
   - dir %APPVEYOR_PROJECT_NAME%
-  - ps: Rename-Item -Path "$env:APPVEYOR_PROJECT_NAME\$env:APPVEYOR_PROJECT_NAME.$version_number.nupkg" -NewName "$env:PACKAGE_PREFIX.$env:APPVEYOR_PROJECT_NAME.$version_number.nupkg"
+  - ps: Rename-Item -Path "$env:APPVEYOR_PROJECT_NAME\$env:APPVEYOR_PROJECT_NAME$version_number.nupkg" -NewName "$env:PACKAGE_PREFIX.$env:APPVEYOR_PROJECT_NAME$version_number.nupkg"
 
 before_test:
   - nuget install OpenCover -Version %opencover_version% -OutputDirectory packages
