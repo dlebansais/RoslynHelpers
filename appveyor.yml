@@ -58,8 +58,11 @@ after_build:
   - ps: $env:VERSION_NUMBER=$version_number
   - ps: $env:VERSION_TAG=$version_tag
   - echo Version is "%VERSION_TAG%"
+  - echo if exist "%APPVEYOR_PROJECT_NAME%%VERSION_NUMBER%.nupkg" ren "%APPVEYOR_PROJECT_NAME%%VERSION_NUMBER%.nupkg" "%PACKAGE_PREFIX%.%APPVEYOR_PROJECT_NAME%%VERSION_NUMBER%.nupkg"
   - if exist "%APPVEYOR_PROJECT_NAME%%VERSION_NUMBER%.nupkg" ren "%APPVEYOR_PROJECT_NAME%%VERSION_NUMBER%.nupkg" "%PACKAGE_PREFIX%.%APPVEYOR_PROJECT_NAME%%VERSION_NUMBER%.nupkg"
+  - echo if exist "%APPVEYOR_PROJECT_NAME%-Debug%VERSION_NUMBER%.nupkg" ren "%APPVEYOR_PROJECT_NAME%-Debug%VERSION_NUMBER%.nupkg" "%PACKAGE_PREFIX%.%APPVEYOR_PROJECT_NAME%-Debug%VERSION_NUMBER%.nupkg"
   - if exist "%APPVEYOR_PROJECT_NAME%-Debug%VERSION_NUMBER%.nupkg" ren "%APPVEYOR_PROJECT_NAME%-Debug%VERSION_NUMBER%.nupkg" "%PACKAGE_PREFIX%.%APPVEYOR_PROJECT_NAME%-Debug%VERSION_NUMBER%.nupkg"
+  - dir
 
 before_test:
   - nuget install OpenCover -Version %opencover_version% -OutputDirectory packages
@@ -80,10 +83,10 @@ after_test:
   - if '%CONFIGURATION%' == 'Debug' if '%APPVEYOR_REPO_BRANCH%' == 'master' .\packages\CodecovUploader.%codecov_version%\Tools\codecov.exe -f "Coverage-%APPVEYOR_PROJECT_NAME%.xml"
 
 artifacts:
-  - path: $(APPVEYOR_PROJECT_NAME)-Debug.*.nupkg
+  - path: $(PACKAGE_PREFIX).$(APPVEYOR_PROJECT_NAME)-Debug.*.nupkg
     name: $(APPVEYOR_PROJECT_NAME)-Package-Debug
     type: NuGetPackage
-  - path: $(APPVEYOR_PROJECT_NAME).*.nupkg
+  - path: $(PACKAGE_PREFIX).$(APPVEYOR_PROJECT_NAME).*.nupkg
     name: $(APPVEYOR_PROJECT_NAME)-Package-Release
     type: NuGetPackage
 
