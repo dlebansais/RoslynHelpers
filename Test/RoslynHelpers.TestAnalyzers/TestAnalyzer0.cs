@@ -45,34 +45,8 @@ public class TestAnalyzer0 : DiagnosticAnalyzer
 
         // Ensure that all variables in the local declaration have initializers that are assigned with constant values.
         foreach (VariableDeclaratorSyntax variable in LocalDeclaration.Declaration.Variables)
-        {
-            EqualsValueClauseSyntax? initializer = variable.Initializer;
-            if (initializer is null)
+            if (!IsVariableAssignedToConstantValue(context, VariableType, variable))
                 return;
-
-            Optional<object?> constantValue = context.SemanticModel.GetConstantValue(initializer.Value, context.CancellationToken);
-            if (!constantValue.HasValue)
-                return;
-
-            if (VariableType is not null)
-            {
-                // Ensure that the initializer value can be converted to the type of the local declaration without a user-defined conversion.
-                Conversion conversion = context.SemanticModel.ClassifyConversion(initializer.Value, VariableType);
-                if (!conversion.Exists || conversion.IsUserDefined)
-                    return;
-
-                // Special cases:
-                //  * If the constant value is a string, the type of the local declaration must be System.String.
-                //  * If the constant value is null, the type of the local declaration must be a reference type.
-                if (constantValue.Value is string)
-                {
-                    if (VariableType.SpecialType != SpecialType.System_String)
-                        return;
-                }
-                else if (VariableType.IsReferenceType && constantValue.Value is not null)
-                    return;
-            }
-        }
 
         // Perform data flow analysis on the local declaration.
         DataFlowAnalysis? dataFlowAnalysis = context.SemanticModel.AnalyzeDataFlow(LocalDeclaration);
@@ -86,5 +60,37 @@ public class TestAnalyzer0 : DiagnosticAnalyzer
         }
 
         context.ReportDiagnostic(Diagnostic.Create(Rule, context.Node.GetLocation(), LocalDeclaration.Declaration.Variables.First().Identifier.ValueText));
+    }
+
+    private bool IsVariableAssignedToConstantValue(SyntaxNodeAnalysisContext context, ITypeSymbol variableType, VariableDeclaratorSyntax variable)
+    {
+        EqualsValueClauseSyntax? initializer = variable.Initializer;
+        if (initializer is null)
+            return false;
+
+        Optional<object?> constantValue = context.SemanticModel.GetConstantValue(initializer.Value, context.CancellationToken);
+        if (!constantValue.HasValue)
+            return false;
+
+        if (variableType is not null)
+        {
+            // Ensure that the initializer value can be converted to the type of the local declaration without a user-defined conversion.
+            Conversion conversion = context.SemanticModel.ClassifyConversion(initializer.Value, variableType);
+            if (!conversion.Exists || conversion.IsUserDefined)
+                return false;
+
+            // Special cases:
+            //  * If the constant value is a string, the type of the local declaration must be System.String.
+            //  * If the constant value is null, the type of the local declaration must be a reference type.
+            if (constantValue.Value is string)
+            {
+                if (variableType.SpecialType != SpecialType.System_String)
+                    return false;
+            }
+            else if (variableType.IsReferenceType && constantValue.Value is not null)
+                return false;
+        }
+
+        return true;
     }
 }
