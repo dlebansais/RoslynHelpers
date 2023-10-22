@@ -40,9 +40,6 @@ public class TestAnalyzer0 : DiagnosticAnalyzer
 
         ITypeSymbol? VariableType = VariableTypeName.GetTypeValidType(context);
 
-        if (VariableType is null)
-            return;
-
         // Ensure that all variables in the local declaration have initializers that are assigned with constant values.
         foreach (VariableDeclaratorSyntax variable in LocalDeclaration.Declaration.Variables)
             if (!IsVariableAssignedToConstantValue(context, VariableType, variable))
@@ -62,7 +59,7 @@ public class TestAnalyzer0 : DiagnosticAnalyzer
         context.ReportDiagnostic(Diagnostic.Create(Rule, context.Node.GetLocation(), LocalDeclaration.Declaration.Variables.First().Identifier.ValueText));
     }
 
-    private bool IsVariableAssignedToConstantValue(SyntaxNodeAnalysisContext context, ITypeSymbol variableType, VariableDeclaratorSyntax variable)
+    private bool IsVariableAssignedToConstantValue(SyntaxNodeAnalysisContext context, ITypeSymbol? variableType, VariableDeclaratorSyntax variable)
     {
         EqualsValueClauseSyntax? initializer = variable.Initializer;
         if (initializer is null)
