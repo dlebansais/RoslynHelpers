@@ -32,9 +32,9 @@ public static class TypeHelper
     /// <returns>The type of <paramref name="type"/>if a valid type; otherwise, <see langword="null"/>.</returns>
     public static ITypeSymbol? GetTypeValidType(this TypeSyntax type, SyntaxNodeAnalysisContext context)
     {
-        TypeInfo ExpressionTypeInfo = context.SemanticModel.GetTypeInfo(type, context.CancellationToken);
-        ITypeSymbol? ExpressionType = ExpressionTypeInfo.Type;
+        TypeInfo TypeTypeInfo = context.SemanticModel.GetTypeInfo(type, context.CancellationToken);
+        ITypeSymbol? TypeType = TypeTypeInfo.Type;
 
-        return ExpressionType is ITypeSymbol ValidResult && ExpressionType is not IErrorTypeSymbol ? ValidResult : null;
+        return TypeType is ITypeSymbol ValidResult && TypeType is not IErrorTypeSymbol ? ValidResult : null;
     }
 }
