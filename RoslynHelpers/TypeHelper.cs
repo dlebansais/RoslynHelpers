@@ -21,7 +21,10 @@ public static class TypeHelper
         TypeInfo ExpressionTypeInfo = context.SemanticModel.GetTypeInfo(expression, context.CancellationToken);
         ITypeSymbol? ExpressionType = ExpressionTypeInfo.Type;
 
-        return ExpressionType is ITypeSymbol ValidResult && ExpressionType is not IErrorTypeSymbol ? ValidResult : null;
+        if (!IsTypeSymbolAndNotError(ExpressionTypeInfo, out ITypeSymbol ValidResult))
+            return null;
+
+        return ValidResult;
     }
 
     /// <summary>
@@ -35,6 +38,24 @@ public static class TypeHelper
         TypeInfo TypeTypeInfo = context.SemanticModel.GetTypeInfo(type, context.CancellationToken);
         ITypeSymbol? TypeType = TypeTypeInfo.Type;
 
-        return TypeType is ITypeSymbol ValidResult && TypeType is not IErrorTypeSymbol ? ValidResult : null;
+        if (!IsTypeSymbolAndNotError(TypeTypeInfo, out ITypeSymbol ValidResult))
+            return null;
+
+        return ValidResult;
+    }
+
+    private static bool IsTypeSymbolAndNotError<T>(TypeInfo typeInfo, out T result)
+        where T : class
+    {
+        ITypeSymbol? Type = typeInfo.Type;
+
+        if (Type is T ValidResult && Type is not IErrorTypeSymbol)
+        {
+            result = ValidResult;
+            return true;
+        }
+
+        result = null!;
+        return false;
     }
 }
