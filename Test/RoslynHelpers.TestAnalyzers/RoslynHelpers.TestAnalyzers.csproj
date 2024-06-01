@@ -5,6 +5,7 @@
 		<IsPackable>false</IsPackable>
 		<LangVersion>12</LangVersion>
 		<Nullable>enable</Nullable>
+		<Platforms>AnyCPU;x64</Platforms>
 	</PropertyGroup>
 
 	<ItemGroup>
