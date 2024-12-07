@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>netcoreapp3.1;net8.0</TargetFrameworks>
+		<TargetFrameworks>netcoreapp3.1</TargetFrameworks>
 		<LangVersion>12</LangVersion>
 		<Nullable>enable</Nullable>
 		<SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
@@ -12,15 +12,19 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
-		<PackageReference Include="MSTest.TestAdapter" Version="3.6.3" />
-		<PackageReference Include="MSTest.TestFramework" Version="3.6.3" />
-		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Analyzer.Testing" Version="1.1.2" />
-		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.CodeFix.Testing" Version="1.1.2" />
-		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.CodeRefactoring.Testing" Version="1.1.2" />
-	</ItemGroup>
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+		<PackageReference Include="MSTest.TestAdapter" Version="3.6.4" />
+		<PackageReference Include="MSTest.TestFramework" Version="3.6.4" />
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Analyzer.Testing" Version="1.1.2" />
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.CodeFix.Testing" Version="1.1.2" />
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.CodeRefactoring.Testing" Version="1.1.2" />
 
-	<ItemGroup>
+        <!-- System.Formats.Asn1 is added to mitigate vulnerability. -->
+        <!-- Remove as soon as one of the packages above no longer depends on the vulnerable version -->
+        <PackageReference Include="System.Formats.Asn1" Version="9.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
 		<ProjectReference Include="..\RoslynHelpers.TestAnalyzers\RoslynHelpers.TestAnalyzers.csproj" />
 	</ItemGroup>
 

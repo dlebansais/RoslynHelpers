@@ -1,29 +1,36 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+		<TargetFrameworks>netstandard2.0;netstandard2.1;net8.0;net9.0</TargetFrameworks>
 		<Nullable>enable</Nullable>
-		<LangVersion>12</LangVersion>
-		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<Version>1.0.0</Version>
+		<LangVersion>13</LangVersion>
+        <Platforms>x64</Platforms>
+
+        <RootNamespace>RoslynHelpers</RootNamespace>
+		<Version>1.0.1</Version>
 		<Authors>David Le Bansais</Authors>
 		<Company />
 		<Product />
 		<Description>A set of helpers to assist Roslyn analyzers</Description>
-		<Copyright>Copyright © 2023 David Le Bansais</Copyright>
-		<AssemblyVersion>1.0.0.4</AssemblyVersion>
-		<FileVersion>1.0.0.4</FileVersion>
+        <Copyright>Copyright © 2024 David Le Bansais</Copyright>
+        <AssemblyVersion>1.0.1.5</AssemblyVersion>
+		<FileVersion>1.0.1.5</FileVersion>
 		<RepositoryUrl>https://github.com/dlebansais/RoslynHelpers</RepositoryUrl>
-		<NeutralLanguage>en-US</NeutralLanguage>
-		<RootNamespace>RoslynHelpers</RootNamespace>
-		<SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
-		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-		<PublishRepositoryUrl>true</PublishRepositoryUrl>
-		<EmbedUntrackedSources>true</EmbedUntrackedSources>
-		<IncludeSymbols>true</IncludeSymbols>
-		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-		<Platforms>x64</Platforms>
-	</PropertyGroup>
+        <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
+
+        <NeutralLanguage>en-US</NeutralLanguage>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <EnableNETAnalyzers>true</EnableNETAnalyzers>
+        <AnalysisLevel>latest-all</AnalysisLevel>
+        <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
+        <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    </PropertyGroup>
 
 	<PropertyGroup Condition="'$(APPVEYOR)' == 'True'">
 		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
@@ -34,16 +41,42 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		<PackageReference Include="StyleCop.Analyzers.Unstable" Version="1.*">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.9.2" />
-	</ItemGroup>
+        <PackageReference Include="IDisposableAnalyzers" Version="4.0.8">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Nullable.Extended.Analyzer" Version="1.15.6169">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="StyleCop.Analyzers.Unstable" Version="1.2.0.556">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="ConsistencyAnalyzer" Version="1.3.22">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Method.Contracts.Analyzers-Debug" Version="1.8.0" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Method.Contracts.Analyzers" Version="1.8.0" Condition="'$(Configuration)|$(Platform)'!='Debug|x64'">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="PolySharp" Version="1.15.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.12.0" />
+        <PackageReference Include="Method.Contracts-Debug" Version="1.8.0" GeneratePathProperty="true" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+        <PackageReference Include="Method.Contracts" Version="1.8.0" GeneratePathProperty="true" Condition="'$(Configuration)|$(Platform)'!='Debug|x64'" />
+    </ItemGroup>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(SolutionDir)'!='*Undefined*'">
 		<Exec Command="if exist &quot;$(SolutionDir)updatecommit.bat&quot; call &quot;$(SolutionDir)updatecommit.bat&quot; &quot;$(SolutionDir)&quot; &quot;$(TargetPath)&quot;" />

@@ -1,5 +1,6 @@
 ﻿namespace RoslynHelpers;
 
+using Contracts;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -19,12 +20,10 @@ public static class TypeHelper
     public static ITypeSymbol? GetExpressionValidType(this ExpressionSyntax expression, SyntaxNodeAnalysisContext context)
     {
         TypeInfo ExpressionTypeInfo = context.SemanticModel.GetTypeInfo(expression, context.CancellationToken);
-        ITypeSymbol? ExpressionType = ExpressionTypeInfo.Type;
 
-        if (!IsTypeSymbolAndNotError(ExpressionTypeInfo, out ITypeSymbol ValidResult))
-            return null;
-
-        return ValidResult;
+        return IsTypeSymbolAndNotError(ExpressionTypeInfo, out ITypeSymbol ValidResult)
+            ? ValidResult
+            : null;
     }
 
     /// <summary>
@@ -36,12 +35,10 @@ public static class TypeHelper
     public static ITypeSymbol? GetTypeValidType(this TypeSyntax type, SyntaxNodeAnalysisContext context)
     {
         TypeInfo TypeTypeInfo = context.SemanticModel.GetTypeInfo(type, context.CancellationToken);
-        ITypeSymbol? TypeType = TypeTypeInfo.Type;
 
-        if (!IsTypeSymbolAndNotError(TypeTypeInfo, out ITypeSymbol ValidResult))
-            return null;
-
-        return ValidResult;
+        return IsTypeSymbolAndNotError(TypeTypeInfo, out ITypeSymbol ValidResult)
+            ? ValidResult
+            : null;
     }
 
     private static bool IsTypeSymbolAndNotError<T>(TypeInfo typeInfo, out T result)
@@ -49,13 +46,13 @@ public static class TypeHelper
     {
         ITypeSymbol? Type = typeInfo.Type;
 
-        if (Type is T ValidResult && Type is not IErrorTypeSymbol)
+        if (Type is T ValidResult and not IErrorTypeSymbol)
         {
             result = ValidResult;
             return true;
         }
 
-        result = null!;
+        Contract.Unused(out result);
         return false;
     }
 }

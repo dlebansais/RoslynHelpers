@@ -1,6 +1,7 @@
 ﻿namespace RoslynHelpers;
 
-using System.Diagnostics;
+using System.Collections.Immutable;
+using Contracts;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -9,7 +10,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 /// <summary>
 /// Helpers to check whether the == operator is overloaded.
 /// </summary>
-public static class OperatorOverloadHelper
+public static partial class OperatorOverloadHelper
 {
     /// <summary>
     /// Checks whether <paramref name="typeSymbol"/> is overloading the == operator.
@@ -17,8 +18,11 @@ public static class OperatorOverloadHelper
     /// <param name="typeSymbol">The type to check.</param>
     /// <param name="context">The analysis context.</param>
     /// <returns><see langword="true"/> if <paramref name="typeSymbol"/> is overloading the == operator; otherwise, <see langword="false"/>.</returns>
-    public static bool IsOverloadingEqualsOperator(this ITypeSymbol typeSymbol, SyntaxNodeAnalysisContext context)
-        => IsOverloadingEqualsOperator(typeSymbol, context, SyntaxKind.EqualsEqualsToken);
+    [RequireNotNull(nameof(typeSymbol))]
+    private static bool IsOverloadingEqualsOperatorVerified(this ITypeSymbol typeSymbol, SyntaxNodeAnalysisContext context)
+    {
+        return IsOverloadingEqualsOperator(typeSymbol, context, SyntaxKind.EqualsEqualsToken);
+    }
 
     /// <summary>
     /// Checks whether <paramref name="typeSymbol"/> is overloading the != operator.
@@ -26,8 +30,11 @@ public static class OperatorOverloadHelper
     /// <param name="typeSymbol">The type to check.</param>
     /// <param name="context">The analysis context.</param>
     /// <returns><see langword="true"/> if <paramref name="typeSymbol"/> is overloading the != operator; otherwise, <see langword="false"/>.</returns>
-    public static bool IsOverloadingExclamationEqualsOperator(this ITypeSymbol typeSymbol, SyntaxNodeAnalysisContext context)
-        => IsOverloadingEqualsOperator(typeSymbol, context, SyntaxKind.ExclamationEqualsToken);
+    [RequireNotNull(nameof(typeSymbol))]
+    private static bool IsOverloadingExclamationEqualsOperatorVerified(this ITypeSymbol typeSymbol, SyntaxNodeAnalysisContext context)
+    {
+        return IsOverloadingEqualsOperator(typeSymbol, context, SyntaxKind.ExclamationEqualsToken);
+    }
 
     /// <summary>
     /// Checks whether <paramref name="typeSymbol"/> is overloading the <paramref name="operatorKind"/> operator.
@@ -42,18 +49,17 @@ public static class OperatorOverloadHelper
         if (!typeSymbol.IsReferenceType && typeSymbol.NullableAnnotation == NullableAnnotation.Annotated)
         {
             INamedTypeSymbol NamedTypeSymbol = (INamedTypeSymbol)typeSymbol;
-            var OriginalDefinition = NamedTypeSymbol.OriginalDefinition;
+            INamedTypeSymbol OriginalDefinition = Contract.AssertNotNull(NamedTypeSymbol.OriginalDefinition);
 
-            Debug.Assert(OriginalDefinition is not null);
-            Debug.Assert(OriginalDefinition!.SpecialType == SpecialType.System_Nullable_T);
+            Contract.Assert(OriginalDefinition.SpecialType == SpecialType.System_Nullable_T);
 
             // Get the original struct type. This is the type to inspect for overloaded operators.
             typeSymbol = NamedTypeSymbol.TypeArguments[0];
         }
 
-        var Symbols = typeSymbol.GetMembers();
+        ImmutableArray<ISymbol> Symbols = typeSymbol.GetMembers();
 
-        foreach (var Symbol in Symbols)
+        foreach (ISymbol Symbol in Symbols)
             if (!Symbol.IsImplicitlyDeclared && Symbol.IsOperatorOverload(context, operatorKind))
                 return true;
 
@@ -62,7 +68,7 @@ public static class OperatorOverloadHelper
 
     private static bool IsOperatorOverload(this ISymbol symbol, SyntaxNodeAnalysisContext context, SyntaxKind operatorKind)
     {
-        foreach (var SyntaxReference in symbol.DeclaringSyntaxReferences)
+        foreach (SyntaxReference SyntaxReference in symbol.DeclaringSyntaxReferences)
         {
             SyntaxNode Declaration = SyntaxReference.GetSyntax(context.CancellationToken);
 
