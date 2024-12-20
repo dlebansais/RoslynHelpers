@@ -20,9 +20,7 @@ public static partial class OperatorOverloadHelper
     /// <returns><see langword="true"/> if <paramref name="typeSymbol"/> is overloading the == operator; otherwise, <see langword="false"/>.</returns>
     [RequireNotNull(nameof(typeSymbol))]
     private static bool IsOverloadingEqualsOperatorVerified(this ITypeSymbol typeSymbol, SyntaxNodeAnalysisContext context)
-    {
-        return IsOverloadingEqualsOperator(typeSymbol, context, SyntaxKind.EqualsEqualsToken);
-    }
+        => IsOverloadingEqualsOperator(typeSymbol, context, SyntaxKind.EqualsEqualsToken);
 
     /// <summary>
     /// Checks whether <paramref name="typeSymbol"/> is overloading the != operator.
@@ -32,9 +30,7 @@ public static partial class OperatorOverloadHelper
     /// <returns><see langword="true"/> if <paramref name="typeSymbol"/> is overloading the != operator; otherwise, <see langword="false"/>.</returns>
     [RequireNotNull(nameof(typeSymbol))]
     private static bool IsOverloadingExclamationEqualsOperatorVerified(this ITypeSymbol typeSymbol, SyntaxNodeAnalysisContext context)
-    {
-        return IsOverloadingEqualsOperator(typeSymbol, context, SyntaxKind.ExclamationEqualsToken);
-    }
+        => IsOverloadingEqualsOperator(typeSymbol, context, SyntaxKind.ExclamationEqualsToken);
 
     /// <summary>
     /// Checks whether <paramref name="typeSymbol"/> is overloading the <paramref name="operatorKind"/> operator.

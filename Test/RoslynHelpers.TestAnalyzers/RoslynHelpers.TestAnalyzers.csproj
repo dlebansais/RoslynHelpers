@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFrameworks>netstandard2.0</TargetFrameworks>
 		<IsPackable>false</IsPackable>
-		<LangVersion>12</LangVersion>
+		<LangVersion>13</LangVersion>
 		<Nullable>enable</Nullable>
 		<Platforms>x64</Platforms>
 	</PropertyGroup>
