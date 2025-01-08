@@ -21,9 +21,15 @@ public static class TypeHelper
     {
         TypeInfo ExpressionTypeInfo = context.SemanticModel.GetTypeInfo(expression, context.CancellationToken);
 
-        return IsTypeSymbolAndNotError(ExpressionTypeInfo, out ITypeSymbol ValidResult)
-            ? ValidResult
-            : null;
+        bool Success = IsTypeSymbolAndNotError(ExpressionTypeInfo, out ITypeSymbol ValidResult);
+
+        if (Success)
+        {
+            Contract.Assert(ValidResult is not null);
+            return ValidResult;
+        }
+
+        return null;
     }
 
     /// <summary>

@@ -1,6 +1,8 @@
 ﻿namespace RoslynHelpers;
 
+using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using Contracts;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -54,24 +56,33 @@ public static partial class OperatorOverloadHelper
         }
 
         ImmutableArray<ISymbol> Symbols = typeSymbol.GetMembers();
+        IEnumerable<ISymbol> Overloads = Symbols.Where(symbol => symbol.IsOperatorOverload(context));
+        bool HasOverloadOfKind = Overloads.Any(symbol => symbol.IsOperatorOverloadOfKind(context, operatorKind));
 
-        foreach (ISymbol Symbol in Symbols)
-            if (!Symbol.IsImplicitlyDeclared && Symbol.IsOperatorOverload(context, operatorKind))
-                return true;
-
-        return false;
+        return HasOverloadOfKind;
     }
 
-    private static bool IsOperatorOverload(this ISymbol symbol, SyntaxNodeAnalysisContext context, SyntaxKind operatorKind)
+    private static bool IsOperatorOverload(this ISymbol symbol, SyntaxNodeAnalysisContext context)
     {
-        foreach (SyntaxReference SyntaxReference in symbol.DeclaringSyntaxReferences)
-        {
-            SyntaxNode Declaration = SyntaxReference.GetSyntax(context.CancellationToken);
+        if (symbol.DeclaringSyntaxReferences.Length == 0)
+            return false;
 
-            if (Declaration is OperatorDeclarationSyntax OperatorDeclaration && OperatorDeclaration.OperatorToken.IsKind(operatorKind))
-                return true;
-        }
+        SyntaxReference SyntaxReference = symbol.DeclaringSyntaxReferences[0];
+        bool IsOperator = SyntaxReference.GetSyntax(context.CancellationToken) is OperatorDeclarationSyntax;
 
-        return false;
+        return IsOperator;
+    }
+
+    private static bool IsOperatorOverloadOfKind(this ISymbol symbol, SyntaxNodeAnalysisContext context, SyntaxKind operatorKind)
+    {
+        Contract.Assert(symbol.DeclaringSyntaxReferences.Length > 0);
+
+        SyntaxReference SyntaxReference = symbol.DeclaringSyntaxReferences[0];
+        SyntaxNode Node = SyntaxReference.GetSyntax(context.CancellationToken);
+        Contract.Assert(Node is OperatorDeclarationSyntax);
+
+        OperatorDeclarationSyntax OperatorDeclaration = (OperatorDeclarationSyntax)Node;
+
+        return OperatorDeclaration.OperatorToken.IsKind(operatorKind);
     }
 }
