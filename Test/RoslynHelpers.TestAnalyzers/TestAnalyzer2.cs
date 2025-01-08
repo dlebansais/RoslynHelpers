@@ -20,9 +20,9 @@ public class TestAnalyzer2 : DiagnosticAnalyzer
     private static readonly LocalizableString Description = new LocalizableResourceString(nameof(Resources.AnalyzerDescription), Resources.ResourceManager, typeof(Resources));
     private const string Category = "Usage";
 
-    public static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Warning, isEnabledByDefault: true, description: Description);
+    public static readonly DiagnosticDescriptor Rule = new(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Warning, isEnabledByDefault: true, description: Description);
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get { return ImmutableArray.Create(Rule); } }
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [Rule];
 
     public override void Initialize(AnalysisContext context)
     {
@@ -34,7 +34,7 @@ public class TestAnalyzer2 : DiagnosticAnalyzer
 
     private void AnalyzeNode(SyntaxNodeAnalysisContext context)
     {
-        var BinaryExpression = (BinaryExpressionSyntax)context.Node;
+        BinaryExpressionSyntax BinaryExpression = (BinaryExpressionSyntax)context.Node;
 
         ITypeSymbol? ExpressionType = BinaryExpression.Left.GetExpressionValidType(context);
 

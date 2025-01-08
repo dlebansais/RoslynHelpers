@@ -19,7 +19,7 @@ public static partial class OperatorOverloadHelper
     /// <param name="context">The analysis context.</param>
     /// <returns><see langword="true"/> if <paramref name="typeSymbol"/> is overloading the == operator; otherwise, <see langword="false"/>.</returns>
     [RequireNotNull(nameof(typeSymbol))]
-    private static bool IsOverloadingEqualsOperatorVerified(this ITypeSymbol typeSymbol, SyntaxNodeAnalysisContext context)
+    private static bool IsOverloadingEqualsEqualsOperatorVerified(this ITypeSymbol typeSymbol, SyntaxNodeAnalysisContext context)
         => IsOverloadingEqualsOperator(typeSymbol, context, SyntaxKind.EqualsEqualsToken);
 
     /// <summary>

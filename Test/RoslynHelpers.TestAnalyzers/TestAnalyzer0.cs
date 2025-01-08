@@ -20,15 +20,15 @@ public class TestAnalyzer0 : DiagnosticAnalyzer
     private static readonly LocalizableString Title = new LocalizableResourceString(nameof(Resources.AnalyzerTitle), Resources.ResourceManager, typeof(Resources));
     private static readonly LocalizableString MessageFormat = new LocalizableResourceString(nameof(Resources.AnalyzerMessageFormat), Resources.ResourceManager, typeof(Resources));
     private static readonly LocalizableString Description = new LocalizableResourceString(nameof(Resources.AnalyzerDescription), Resources.ResourceManager, typeof(Resources));
-    private static readonly Resources Resources = new Resources();
-    private static readonly string TitleString = Resources.AnalyzerTitle;
-    private static readonly string MessageFormatString = Resources.AnalyzerMessageFormat;
-    private static readonly string DescriptionString = Resources.AnalyzerDescription;
+    public static readonly Resources Resources = new();
+    public static readonly string TitleString = Resources.AnalyzerTitle;
+    public static readonly string MessageFormatString = Resources.AnalyzerMessageFormat;
+    public static readonly string DescriptionString = Resources.AnalyzerDescription;
     private const string Category = "Usage";
 
-    public static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Warning, isEnabledByDefault: true, description: Description);
+    public static readonly DiagnosticDescriptor Rule = new(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Warning, isEnabledByDefault: true, description: Description);
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get { return ImmutableArray.Create(Rule); } }
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [Rule];
 
     public override void Initialize(AnalysisContext context)
     {
@@ -43,7 +43,7 @@ public class TestAnalyzer0 : DiagnosticAnalyzer
 
     private void AnalyzeNode(SyntaxNodeAnalysisContext context)
     {
-        var LocalDeclaration = (LocalDeclarationStatementSyntax)context.Node;
+        LocalDeclarationStatementSyntax LocalDeclaration = (LocalDeclarationStatementSyntax)context.Node;
         TypeSyntax VariableTypeName = LocalDeclaration.Declaration.Type;
 
         ITypeSymbol? VariableType = VariableTypeName.GetTypeValidType(context);
@@ -60,8 +60,9 @@ public class TestAnalyzer0 : DiagnosticAnalyzer
         {
             // Retrieve the local symbol for each variable in the local declaration and ensure that it is not written outside of the data flow analysis region.
             ISymbol? variableSymbol = context.SemanticModel.GetDeclaredSymbol(variable, context.CancellationToken);
-            //if (dataFlowAnalysis is not null && variableSymbol is not null && dataFlowAnalysis.WrittenOutside.Contains(variableSymbol))
-            //    return;
+
+            if (dataFlowAnalysis is not null && variableSymbol is not null && dataFlowAnalysis.WrittenOutside.Contains(variableSymbol))
+                return;
         }
 
         context.ReportDiagnostic(Diagnostic.Create(Rule, context.Node.GetLocation(), LocalDeclaration.Declaration.Variables.First().Identifier.ValueText));
@@ -77,19 +78,8 @@ public class TestAnalyzer0 : DiagnosticAnalyzer
 
         // Ensure that the initializer value can be converted to the type of the local declaration without a user-defined conversion.
         Conversion conversion = context.SemanticModel.ClassifyConversion(initializer.Value, variableType!);
-        //if (!conversion.Exists || conversion.IsUserDefined)
-        //    return false;
-
-        // Special cases:
-        //  * If the constant value is a string, the type of the local declaration must be System.String.
-        //  * If the constant value is null, the type of the local declaration must be a reference type.
-        /*if (constantValue.Value is string)
-        {
-            if (variableType.SpecialType != SpecialType.System_String)
-                return false;
-        }
-        else if (variableType.IsReferenceType && constantValue.Value is not null)
-            return false;*/
+        if (!conversion.Exists || conversion.IsUserDefined)
+            return false;
 
         return true;
     }
