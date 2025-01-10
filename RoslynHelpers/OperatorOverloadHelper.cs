@@ -10,7 +10,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 
 /// <summary>
-/// Helpers to check whether the == operator is overloaded.
+/// Helper to check whether the == operator is overloaded.
 /// </summary>
 public static partial class OperatorOverloadHelper
 {

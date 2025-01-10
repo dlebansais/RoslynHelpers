@@ -11,7 +11,7 @@ A set of helpers to assist Roslyn analyzers.
 
 Extension | Method | Purpose
 ----------|--------|--------
-ITypeSymbol | IsOverloadingEqualsOperator | Checks whether a type is overloading the `==` operator
+ITypeSymbol | IsOverloadingEqualsEqualsOperator | Checks whether a type is overloading the `==` operator
 ITypeSymbol | IsOverloadingExclamationEqualsOperator | Checks whether a type is overloading the `!=` operator
 
 ## TypeHelper

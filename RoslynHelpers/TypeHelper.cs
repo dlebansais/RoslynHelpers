@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 
 /// <summary>
-/// Helpers to perform operations on types.
+/// Helper to perform operations on types.
 /// </summary>
 public static class TypeHelper
 {

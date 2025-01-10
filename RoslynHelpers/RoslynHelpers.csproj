@@ -7,14 +7,14 @@
         <Platforms>x64</Platforms>
 
         <RootNamespace>RoslynHelpers</RootNamespace>
-		<Version>2.0.1</Version>
+		<Version>2.1.0</Version>
 		<Authors>David Le Bansais</Authors>
 		<Company />
 		<Product />
 		<Description>A set of helpers to assist Roslyn analyzers</Description>
         <Copyright>Copyright © 2024 David Le Bansais</Copyright>
-        <AssemblyVersion>2.0.1.9</AssemblyVersion>
-		<FileVersion>2.0.1.9</FileVersion>
+        <AssemblyVersion>2.1.0.10</AssemblyVersion>
+		<FileVersion>2.1.0.10</FileVersion>
 		<RepositoryUrl>https://github.com/dlebansais/RoslynHelpers</RepositoryUrl>
         <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
 
