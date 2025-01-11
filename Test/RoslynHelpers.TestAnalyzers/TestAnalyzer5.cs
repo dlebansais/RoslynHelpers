@@ -5,15 +5,16 @@
 namespace RoslynHelpers.TestAnalyzers;
 
 using System.Collections.Immutable;
+using Contracts;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public class TestAnalyzer4 : DiagnosticAnalyzer
+public class TestAnalyzer5 : DiagnosticAnalyzer
 {
-    public const string DiagnosticId = "TEST0004";
+    public const string DiagnosticId = "TEST0005";
 
     private static readonly LocalizableString Title = new LocalizableResourceString(nameof(Resources.AnalyzerTitle), Resources.ResourceManager, typeof(Resources));
     private static readonly LocalizableString MessageFormat = new LocalizableResourceString(nameof(Resources.AnalyzerMessageFormat), Resources.ResourceManager, typeof(Resources));
@@ -43,11 +44,22 @@ public class TestAnalyzer4 : DiagnosticAnalyzer
         foreach (UsingDirectiveSyntax UsingDirective in CompilationUnit.Usings)
             Usings += $"{UsingDirective}\n";
 
+        string TestEmpty = UsingDirectiveHelper.SortUsings(string.Empty);
+        Contract.Assert(TestEmpty == string.Empty);
 
-        bool HasGlobalSystem = UsingDirectiveHelper.HasGlobalSystem(Usings) || UsingDirectiveHelper.HasGlobalSystem(string.Empty);
+        string SortedUsings = UsingDirectiveHelper.SortUsings(Usings);
 
-        if (HasGlobalSystem)
+        if (SortedUsings == "\n" + Usings.Replace("\r\n", "\n"))
             return;
+
+        /*
+        string[] SortedLines = SortedUsings.Split('\n');
+        string[] ReverseSortedLines = SortedLines.Reverse().ToArray();
+        string SortedUsings2 = UsingDirectiveHelper.SortUsings(string.Join("\n", ReverseSortedLines));
+
+        if (SortedUsings != SortedUsings2)
+            return;
+        */
 
         context.ReportDiagnostic(Diagnostic.Create(Rule, context.Node.GetLocation(), " *Diagnostic*"));
     }
