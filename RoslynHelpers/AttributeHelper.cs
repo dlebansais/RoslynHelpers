@@ -78,7 +78,7 @@ public static partial class AttributeHelper
 
         if (IsSameNamespaceAssembly)
         {
-            string AttributeName = ToAttributeName(attribute);
+            string AttributeName = ToAttributeNameVerified(attribute);
 
             if (AttributeName == SupportedTypeName)
                 result.Add(attribute);
@@ -89,5 +89,6 @@ public static partial class AttributeHelper
     /// Returns the full name of an attribute.
     /// </summary>
     /// <param name="attribute">The attribute.</param>
-    private static string ToAttributeName(AttributeSyntax attribute) => $"{attribute.Name.GetText()}{nameof(Attribute)}";
+    [RequireNotNull(nameof(attribute))]
+    private static string ToAttributeNameVerified(AttributeSyntax attribute) => $"{attribute.Name.GetText()}{nameof(Attribute)}";
 }

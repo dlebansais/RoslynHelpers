@@ -49,6 +49,10 @@ public class TestAnalyzer3 : DiagnosticAnalyzer
         if (SupportedAttributesNoContext.Count == 1 && SupportedAttributesContext.Count == 1)
             return;
 
+        foreach (AttributeSyntax Attribute in SupportedAttributesContext)
+            if (AttributeHelper.ToAttributeName(Attribute).Length == 0)
+                return;
+
         context.ReportDiagnostic(Diagnostic.Create(Rule, context.Node.GetLocation(), "*Diagnostic*"));
     }
 }
