@@ -49,7 +49,7 @@ public static partial class UsingDirectiveHelper
                 Namespaces.Add(Directive);
 
         Namespaces.Sort(SortWithSystemFirst);
-        Namespaces = Namespaces.Distinct().ToList();
+        Namespaces = [.. Namespaces.Distinct()];
 
         string Result = string.Empty;
 
