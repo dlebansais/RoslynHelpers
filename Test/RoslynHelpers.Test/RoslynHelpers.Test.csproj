@@ -2,14 +2,15 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>net8.0;net9.0</TargetFrameworks>
-		<LangVersion>12</LangVersion>
-		<Nullable>enable</Nullable>
+		<LangVersion>13</LangVersion>
+        <Platforms>x64</Platforms>
+        <Nullable>enable</Nullable>
 		<SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
 
 		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
 		<GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
-		<Platforms>x64</Platforms>
-	</PropertyGroup>
+        <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    </PropertyGroup>
 
     <PropertyGroup>
         <SignAssembly>true</SignAssembly>
