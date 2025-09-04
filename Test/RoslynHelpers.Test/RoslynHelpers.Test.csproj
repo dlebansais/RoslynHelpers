@@ -12,7 +12,7 @@
         <EnableWindowsTargeting>true</EnableWindowsTargeting>
     </PropertyGroup>
 
-    <PropertyGroup>
+    <PropertyGroup Condition="'$(APPVEYOR_PULL_REQUEST_NUMBER)' == ''">
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>..\..\signing.snk</AssemblyOriginatorKeyFile>
     </PropertyGroup>
