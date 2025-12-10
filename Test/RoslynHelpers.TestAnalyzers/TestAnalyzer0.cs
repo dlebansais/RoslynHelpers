@@ -5,6 +5,7 @@
 namespace RoslynHelpers.TestAnalyzers;
 
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Globalization;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -58,11 +59,14 @@ public class TestAnalyzer0 : DiagnosticAnalyzer
 
         foreach (VariableDeclaratorSyntax variable in LocalDeclaration.Declaration.Variables)
         {
+            Debug.Assert(dataFlowAnalysis is not null);
+
             // Retrieve the local symbol for each variable in the local declaration and ensure that it is not written outside of the data flow analysis region.
             ISymbol? variableSymbol = context.SemanticModel.GetDeclaredSymbol(variable, context.CancellationToken);
 
-            if (dataFlowAnalysis is not null && variableSymbol is not null && dataFlowAnalysis.WrittenOutside.Contains(variableSymbol))
-                return;
+            Debug.Assert(variableSymbol is not null);
+
+            Debug.Assert(!dataFlowAnalysis!.WrittenOutside.Contains(variableSymbol!));
         }
 
         context.ReportDiagnostic(Diagnostic.Create(Rule, context.Node.GetLocation(), LocalDeclaration.Declaration.Variables.First().Identifier.ValueText));
@@ -78,8 +82,9 @@ public class TestAnalyzer0 : DiagnosticAnalyzer
 
         // Ensure that the initializer value can be converted to the type of the local declaration without a user-defined conversion.
         Conversion conversion = context.SemanticModel.ClassifyConversion(initializer.Value, variableType!);
-        if (!conversion.Exists || conversion.IsUserDefined)
-            return false;
+
+        Debug.Assert(conversion.Exists);
+        Debug.Assert(!conversion.IsUserDefined);
 
         return true;
     }

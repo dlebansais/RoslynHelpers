@@ -5,6 +5,7 @@
 namespace RoslynHelpers.TestAnalyzers;
 
 using System.Collections.Immutable;
+using System.Diagnostics;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -35,8 +36,13 @@ public class TestAnalyzer4 : DiagnosticAnalyzer
     private void AnalyzeNode(SyntaxNodeAnalysisContext context)
     {
         MemberDeclarationSyntax MemberDeclaration = (MemberDeclarationSyntax)context.Node;
+
+        Debug.Assert(MemberDeclaration.Parent is CompilationUnitSyntax);
+        CompilationUnitSyntax CompilationUnit = (CompilationUnitSyntax)MemberDeclaration.Parent!;
+        /*
         if (MemberDeclaration.Parent is not CompilationUnitSyntax CompilationUnit)
             return;
+        */
 
         string Usings = string.Empty;
 

@@ -7,6 +7,7 @@ namespace RoslynHelpers.TestAnalyzers;
 using System;
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using Contracts;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -48,10 +49,6 @@ public class TestAnalyzer3 : DiagnosticAnalyzer
 
         if (SupportedAttributesNoContext.Count == 1 && SupportedAttributesContext.Count == 1)
             return;
-
-        foreach (AttributeSyntax Attribute in SupportedAttributesContext)
-            if (AttributeHelper.ToAttributeName(Attribute).Length == 0)
-                return;
 
         context.ReportDiagnostic(Diagnostic.Create(Rule, context.Node.GetLocation(), "*Diagnostic*"));
     }

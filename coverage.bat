@@ -12,6 +12,7 @@ set CONFIGURATION=Debug
 set FRAMEWORK=net8.0
 set RESULTFILENAME=Coverage-%PROJECTNAME%.xml
 set RESULTFILEPATH=".\Test\%TESTPROJECTNAME%\bin\%PLATFORM%\%CONFIGURATION%\%FRAMEWORK%\%RESULTFILENAME%"
+set COVERAGE_SCRIPT=true
 
 set OPENCOVER_VERSION=4.7.1221
 set OPENCOVER=OpenCover.%OPENCOVER_VERSION%
@@ -47,6 +48,10 @@ rem Execute tests within OpenCover.
 if not exist %RESULTFILEPATH% goto end
 %CODECOV_UPLOADER_EXE% -f %RESULTFILEPATH% -t %TOKEN%
 %REPORTGENERATOR_EXE% -reports:%RESULTFILEPATH% -targetdir:.\CoverageReports "-assemblyfilters:+%PROJECTNAME%;+%TESTPROJECTNAME%;+%PROJECTNAME%.TestAnalyzers" "-filefilters:-*.g.cs;-*Microsoft.NET.Test.Sdk.Program.cs"
+
+cd Test\%TESTPROJECTNAME%
+dotnet stryker -p %PROJECTNAME%.csproj --configuration:%CONFIGURATION% --output . --reporter markdown
+
 goto end
 
 :error_console1

@@ -12,6 +12,14 @@
         <EnableWindowsTargeting>true</EnableWindowsTargeting>
     </PropertyGroup>
 
+    <PropertyGroup Condition="'$(APPVEYOR)' == 'True'">
+        <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(APPVEYOR)' == 'True' Or '$(COVERAGE_SCRIPT)' != ''">
+        <DefineConstants>$(DefineConstants);DO_NOT_PARALELIZE_TEST_FOR_STRYKER</DefineConstants>
+    </PropertyGroup>
+
     <PropertyGroup Condition="'$(APPVEYOR_PULL_REQUEST_NUMBER)' == ''">
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>..\..\signing.snk</AssemblyOriginatorKeyFile>
