@@ -17,7 +17,7 @@
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(APPVEYOR)' == 'True' Or '$(COVERAGE_SCRIPT)' != ''">
-        <DefineConstants>$(DefineConstants);DO_NOT_PARALELIZE_TEST_FOR_STRYKER</DefineConstants>
+        <DefineConstants>$(DefineConstants);DO_NOT_PARALLELIZE_TEST_FOR_STRYKER</DefineConstants>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(APPVEYOR_PULL_REQUEST_NUMBER)' == ''">
