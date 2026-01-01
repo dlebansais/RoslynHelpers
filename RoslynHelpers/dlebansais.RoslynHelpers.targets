@@ -1,0 +1,22 @@
+<Project>
+  <ItemGroup Condition="'$(Configuration)' == 'Release-4-12-0'">
+    <Reference Include="RoslynHelpers">
+      <HintPath>$(MSBuildThisFileDirectory)..\lib\$(TargetFramework)\roslyn4.12\RoslynHelpers.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(Configuration)' == 'Release-4-14-0'">
+    <Reference Include="RoslynHelpers">
+      <HintPath>$(MSBuildThisFileDirectory)..\lib\$(TargetFramework)\roslyn4.14\RoslynHelpers.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(Configuration)' != 'Release-4-12-0' And '$(Configuration)' != 'Release-4-14-0'">
+    <Reference Include="MyLib">
+      <HintPath>$(MSBuildThisFileDirectory)..\lib\$(TargetFramework)\roslyn5.0\RoslynHelpers.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+  </ItemGroup>
+</Project>
