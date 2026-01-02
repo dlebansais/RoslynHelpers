@@ -2,20 +2,19 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>netstandard2.0;netstandard2.1;net8.0;net9.0</TargetFrameworks>
-        <Configurations>Debug;Release-4-12-0;Release-4-14-0;Release-5-0-0;Release</Configurations>
+		<Nullable>enable</Nullable>
+		<LangVersion>13</LangVersion>
         <Platforms>x64</Platforms>
-        <LangVersion>13</LangVersion>
-        <Nullable>enable</Nullable>
 
         <RootNamespace>RoslynHelpers</RootNamespace>
-		<Version>2.2.9</Version>
+		<Version>2.2.8</Version>
 		<Authors>David Le Bansais</Authors>
 		<Company />
 		<Product />
 		<Description>A set of helpers to assist Roslyn analyzers</Description>
-        <Copyright>Copyright © 2026 David Le Bansais</Copyright>
-        <AssemblyVersion>2.2.9.20</AssemblyVersion>
-		<FileVersion>2.2.9.20</FileVersion>
+        <Copyright>Copyright © 2025 David Le Bansais</Copyright>
+        <AssemblyVersion>2.2.8.19</AssemblyVersion>
+		<FileVersion>2.2.8.19</FileVersion>
 		<RepositoryUrl>https://github.com/dlebansais/RoslynHelpers</RepositoryUrl>
         <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
 
@@ -83,74 +82,36 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
 
+        <!-- Only use 4.14.0 until AppVeyor is upgraded -->
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.14.0" />
         <PackageReference Include="dlebansais.Method.Contracts-Debug" Version="2.0.5" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
         <PackageReference Include="dlebansais.Method.Contracts" Version="2.0.5" Condition="'$(Configuration)|$(Platform)'!='Debug|x64'" />
     </ItemGroup>
 
-    <ItemGroup Condition="'$(Configuration)' == 'Release-4-12-0'">
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.12.0" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(Configuration)' == 'Release-4-14-0'">
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.14.0" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(Configuration)' != 'Release-4-12-0' And '$(Configuration)' != 'Release-4-14-0'">
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.0.0" />
-    </ItemGroup>
-
-    <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(SolutionDir)'!='*Undefined*'">
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(SolutionDir)'!='*Undefined*'">
 		<Exec Command="if exist &quot;$(SolutionDir)updatecommit.bat&quot; call &quot;$(SolutionDir)updatecommit.bat&quot; &quot;$(SolutionDir)&quot; &quot;$(TargetPath)&quot;" />
-		<Exec Command="if exist &quot;$(SolutionDir)signfile.bat&quot; call &quot;$(SolutionDir)signfile.bat&quot; &quot;$(SolutionDir)&quot; &quot;$(Configuration)-$(Platform)&quot; &quot;$(TargetPath)&quot;" Condition="'$(Configuration)' == 'Release'" />
+		<Exec Command="if exist &quot;$(SolutionDir)signfile.bat&quot; call &quot;$(SolutionDir)signfile.bat&quot; &quot;$(SolutionDir)&quot; &quot;$(Configuration)-$(Platform)&quot; &quot;$(TargetPath)&quot;" Condition="'$(Configuration)'=='Release'" />
 
         <ItemGroup>
             <None Remove="@(None)" />
         </ItemGroup>
 
-        <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+        <ItemGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
             <None Include="$(TargetDir)$(ProjectName).dll" />
             <None Include="$(TargetDir)$(ProjectName).pdb" />
             <None Include="$(TargetDir)$(ProjectName).xml" />
         </ItemGroup>
-        <Copy SourceFiles="@(None)" DestinationFolder="$(SolutionDir)nuget-debug\lib\$(TargetFramework)\" Condition="'$(Configuration)' == 'Debug'" />
+        <Copy SourceFiles="@(None)" DestinationFolder="$(SolutionDir)nuget-debug\lib\$(TargetFramework)\" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+        <Copy SourceFiles="package-icon.png" DestinationFolder="$(SolutionDir)nuget-debug\" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+        <Copy SourceFiles="README-short.md" DestinationFolder="$(SolutionDir)nuget-debug\" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
 
-        <Copy SourceFiles="dlebansais.RoslynHelpers.targets" DestinationFolder="$(SolutionDir)nuget-debug\build\" Condition="'$(Configuration)' == 'Debug'" />
-        <Copy SourceFiles="package-icon.png" DestinationFolder="$(SolutionDir)nuget-debug\" Condition="'$(Configuration)' == 'Debug'" />
-        <Copy SourceFiles="README-short.md" DestinationFolder="$(SolutionDir)nuget-debug\" Condition="'$(Configuration)' == 'Debug'" />
-
-        <ItemGroup>
-            <None Remove="@(None)" />
+        <ItemGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+            <None Include="$(TargetDir)$(ProjectName).dll" />
+            <None Include="$(TargetDir)$(ProjectName).xml" />
         </ItemGroup>
-
-        <ItemGroup Condition="'$(Configuration)' == 'Release'">
-            <None Include="$(ProjectDir)bin\x64\Release-4-12-0\$(TargetFramework)\$(ProjectName).dll" />
-            <None Include="$(ProjectDir)bin\x64\Release-4-12-0\$(TargetFramework)\$(ProjectName).xml" />
-        </ItemGroup>
-        <Copy SourceFiles="@(None)" DestinationFolder="$(SolutionDir)nuget\lib\$(TargetFramework)\roslyn4.12" Condition="'$(Configuration)' == 'Release'" />
-
-        <ItemGroup>
-            <None Remove="@(None)" />
-        </ItemGroup>
-
-        <ItemGroup Condition="'$(Configuration)' == 'Release'">
-            <None Include="$(ProjectDir)bin\x64\Release-4-14-0\$(TargetFramework)\$(ProjectName).dll" />
-            <None Include="$(ProjectDir)bin\x64\Release-4-14-0\$(TargetFramework)\$(ProjectName).xml" />
-        </ItemGroup>
-        <Copy SourceFiles="@(None)" DestinationFolder="$(SolutionDir)nuget\lib\$(TargetFramework)\roslyn4.14" Condition="'$(Configuration)' == 'Release'" />
-
-        <ItemGroup>
-            <None Remove="@(None)" />
-        </ItemGroup>
-
-        <ItemGroup Condition="'$(Configuration)' == 'Release'">
-            <None Include="$(ProjectDir)bin\x64\Release-5-0-0\$(TargetFramework)\$(ProjectName).dll" />
-            <None Include="$(ProjectDir)bin\x64\Release-5-0-0\$(TargetFramework)\$(ProjectName).xml" />
-        </ItemGroup>
-        <Copy SourceFiles="@(None)" DestinationFolder="$(SolutionDir)nuget\lib\$(TargetFramework)\roslyn5.0" Condition="'$(Configuration)' == 'Release'" />
-
-        <Copy SourceFiles="dlebansais.RoslynHelpers.targets" DestinationFolder="$(SolutionDir)nuget\build\" Condition="'$(Configuration)' == 'Release'" />
-        <Copy SourceFiles="package-icon.png" DestinationFolder="$(SolutionDir)nuget\" Condition="'$(Configuration)' == 'Release'" />
-        <Copy SourceFiles="README-short.md" DestinationFolder="$(SolutionDir)nuget\" Condition="'$(Configuration)' == 'Release'" />
+        <Copy SourceFiles="@(None)" DestinationFolder="$(SolutionDir)nuget\lib\$(TargetFramework)\" Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
+        <Copy SourceFiles="package-icon.png" DestinationFolder="$(SolutionDir)nuget\" Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
+        <Copy SourceFiles="README-short.md" DestinationFolder="$(SolutionDir)nuget\" Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
     </Target>
 
 </Project>
