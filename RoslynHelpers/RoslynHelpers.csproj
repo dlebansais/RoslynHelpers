@@ -2,8 +2,8 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>netstandard2.0;netstandard2.1;net8.0;net9.0</TargetFrameworks>
-		<Nullable>enable</Nullable>
-		<LangVersion>13</LangVersion>
+        <LangVersion>13</LangVersion>
+        <Nullable>enable</Nullable>
         <Platforms>x64</Platforms>
 
         <RootNamespace>RoslynHelpers</RootNamespace>
