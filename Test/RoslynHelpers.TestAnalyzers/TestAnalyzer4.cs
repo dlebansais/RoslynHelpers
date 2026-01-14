@@ -49,7 +49,6 @@ public class TestAnalyzer4 : DiagnosticAnalyzer
         foreach (UsingDirectiveSyntax UsingDirective in CompilationUnit.Usings)
             Usings += $"{UsingDirective}\n";
 
-
         bool HasGlobalSystem = UsingDirectiveHelper.HasGlobalSystem(Usings) || UsingDirectiveHelper.HasGlobalSystem(string.Empty);
 
         if (HasGlobalSystem)
