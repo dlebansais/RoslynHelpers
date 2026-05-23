@@ -2,12 +2,12 @@
 
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.Testing;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using VerifyCS = CSharpLatest.Test.CSharpAnalyzerVerifier<TestAnalyzers.TestAnalyzer2>;
 
-public partial class OperatorOverloadHelperTest
+internal partial class OperatorOverloadHelperTest
 {
-    [TestMethod]
+    [Test]
     public async Task ExclamationEqualsOperator_Diagnostic()
     {
         await VerifyCS.VerifyAnalyzerAsync(@"
@@ -25,10 +25,10 @@ class Program
             Console.WriteLine(string.Empty);
     }
 }
-");
+").ConfigureAwait(false);
     }
 
-    [TestMethod]
+    [Test]
     public async Task ExclamationEqualsOperator_NoDiagnostic()
     {
         await VerifyCS.VerifyAnalyzerAsync(@"
@@ -65,10 +65,10 @@ class Foo
             return !object.Equals(foo1, foo2);
     }
 }
-");
+").ConfigureAwait(false);
     }
 
-    [TestMethod]
+    [Test]
     public async Task NullableStructExclamationEqualsOperator_NoDiagnostic()
     {
         await VerifyCS.VerifyAnalyzerAsync(@"
@@ -101,10 +101,10 @@ struct Foo
             return !object.Equals(foo1, foo2);
     }
 }
-");
+").ConfigureAwait(false);
     }
 
-    [TestMethod]
+    [Test]
     public async Task StructExclamationEqualsOperator_NoDiagnostic()
     {
         await VerifyCS.VerifyAnalyzerAsync(@"
@@ -126,10 +126,10 @@ class Program
 struct Foo
 {
 }
-", DiagnosticResult.CompilerError("CS0019").WithSpan(12, 13, 12, 22).WithArguments("!=", "Foo", "<null>"));
+", DiagnosticResult.CompilerError("CS0019").WithSpan(12, 13, 12, 22).WithArguments("!=", "Foo", "<null>")).ConfigureAwait(false);
     }
 
-    [TestMethod]
+    [Test]
     public async Task VoidExclamationEqualsOperator_Diagnostic()
     {
         await VerifyCS.VerifyAnalyzerAsync(@"
@@ -149,10 +149,10 @@ class Program
     {
     }
 }
-", DiagnosticResult.CompilerError("CS0019").WithSpan(10, 13, 10, 27).WithArguments("!=", "void", "<null>"));
+", DiagnosticResult.CompilerError("CS0019").WithSpan(10, 13, 10, 27).WithArguments("!=", "void", "<null>")).ConfigureAwait(false);
     }
 
-    [TestMethod]
+    [Test]
     public async Task UnknownExclamationEqualsOperator_Diagnostic()
     {
         await VerifyCS.VerifyAnalyzerAsync(@"
@@ -168,10 +168,10 @@ class Program
             Console.WriteLine(string.Empty);
     }
 }
-", DiagnosticResult.CompilerError("CS0103").WithSpan(10, 13, 10, 14).WithArguments("x"));
+", DiagnosticResult.CompilerError("CS0103").WithSpan(10, 13, 10, 14).WithArguments("x")).ConfigureAwait(false);
     }
 
-    [TestMethod]
+    [Test]
     public async Task ArrayExclamationEqualsOperator_Diagnostic()
     {
         await VerifyCS.VerifyAnalyzerAsync(@"
@@ -189,6 +189,6 @@ class Program
             Console.WriteLine(string.Empty);
     }
 }
-");
+").ConfigureAwait(false);
     }
 }

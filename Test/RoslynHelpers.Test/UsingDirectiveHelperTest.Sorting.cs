@@ -1,12 +1,12 @@
 ﻿namespace RoslynHelpers.Test;
 
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using VerifyCSType = CSharpLatest.Test.CSharpAnalyzerVerifier<TestAnalyzers.TestAnalyzer5>;
 
-public partial class UsingDirectiveHelperTest
+internal partial class UsingDirectiveHelperTest
 {
-    [TestMethod]
+    [Test]
     public async Task Sorted1_NoDiagnostic()
     {
         await VerifyCSType.VerifyAnalyzerAsync(@"
@@ -18,10 +18,10 @@ using FileStream = System.IO.FileStream;
 class Program
 {
 }
-");
+").ConfigureAwait(false);
     }
 
-    [TestMethod]
+    [Test]
     public async Task Sorted2_NoDiagnostic()
     {
         await VerifyCSType.VerifyAnalyzerAsync(@"
@@ -31,10 +31,10 @@ using Contracts;
 class Program
 {
 }
-");
+").ConfigureAwait(false);
     }
 
-    [TestMethod]
+    [Test]
     public async Task Sorted3_NoDiagnostic()
     {
         await VerifyCSType.VerifyAnalyzerAsync(@"
@@ -44,10 +44,10 @@ using Contracts;
 class Program
 {
 }
-");
+").ConfigureAwait(false);
     }
 
-    [TestMethod]
+    [Test]
     public async Task Sorted4_NoDiagnostic()
     {
         await VerifyCSType.VerifyAnalyzerAsync(@"
@@ -57,10 +57,10 @@ using Contracts;
 class Program
 {
 }
-");
+").ConfigureAwait(false);
     }
 
-    [TestMethod]
+    [Test]
     public async Task Sorted5_NoDiagnostic()
     {
         await VerifyCSType.VerifyAnalyzerAsync(@"
@@ -70,10 +70,10 @@ using Contracts;
 class Program
 {
 }
-");
+").ConfigureAwait(false);
     }
 
-    [TestMethod]
+    [Test]
     public async Task Unsorted1_Diagnostic()
     {
         await VerifyCSType.VerifyAnalyzerAsync(@"
@@ -87,10 +87,10 @@ using System.Threading;
 [|class Program
 {
 }|]
-");
+").ConfigureAwait(false);
     }
 
-    [TestMethod]
+    [Test]
     public async Task Unsorted2_Diagnostic()
     {
         await VerifyCSType.VerifyAnalyzerAsync(@"
@@ -104,10 +104,10 @@ using System.Threading;
 [|class Program
 {
 }|]
-");
+").ConfigureAwait(false);
     }
 
-    [TestMethod]
+    [Test]
     public async Task Unsorted3_Diagnostic()
     {
         await VerifyCSType.VerifyAnalyzerAsync(@"
@@ -118,10 +118,10 @@ using FileStream = System.IO.FileStream;
 [|class Program
 {
 }|]
-");
+").ConfigureAwait(false);
     }
 
-    [TestMethod]
+    [Test]
     public async Task Unsorted4_Diagnostic()
     {
         await VerifyCSType.VerifyAnalyzerAsync(@"
@@ -131,10 +131,10 @@ using System;
 [|class Program
 {
 }|]
-");
+").ConfigureAwait(false);
     }
 
-    [TestMethod]
+    [Test]
     public async Task Unsorted5_Diagnostic()
     {
         await VerifyCSType.VerifyAnalyzerAsync(@"
@@ -144,10 +144,10 @@ using System.IO;
 [|class Program
 {
 }|]
-");
+").ConfigureAwait(false);
     }
 
-    [TestMethod]
+    [Test]
     public async Task Unsorted6_Diagnostic()
     {
         await VerifyCSType.VerifyAnalyzerAsync(@"
@@ -157,10 +157,10 @@ using global::System;
 [|class Program
 {
 }|]
-");
+").ConfigureAwait(false);
     }
 
-    [TestMethod]
+    [Test]
     public async Task Unsorted7_Diagnostic()
     {
         await VerifyCSType.VerifyAnalyzerAsync(@"
@@ -170,10 +170,10 @@ using global::System.IO;
 [|class Program
 {
 }|]
-");
+").ConfigureAwait(false);
     }
 
-    [TestMethod]
+    [Test]
     public async Task Unsorted16_Diagnostic()
     {
         await VerifyCSType.VerifyAnalyzerAsync(@"
@@ -185,6 +185,6 @@ using System.Threading;
 [|class Program
 {
 }|]
-");
+").ConfigureAwait(false);
     }
 }

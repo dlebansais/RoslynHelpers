@@ -1,8 +1,8 @@
 ﻿namespace RoslynHelpers.Test;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
-[TestClass]
-public partial class UsingDirectiveHelperTest
+[TestFixture]
+internal partial class UsingDirectiveHelperTest
 {
 }

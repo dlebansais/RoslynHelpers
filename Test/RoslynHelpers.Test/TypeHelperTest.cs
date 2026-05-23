@@ -2,14 +2,14 @@
 
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.Testing;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VerifyCSType = CSharpLatest.Test.CSharpAnalyzerVerifier<TestAnalyzers.TestAnalyzer0>;
 using VerifyCSExpression = CSharpLatest.Test.CSharpAnalyzerVerifier<TestAnalyzers.TestAnalyzer1>;
+using NUnit.Framework;
 
-[TestClass]
-public partial class TypeHelperTest
+[TestFixture]
+internal partial class TypeHelperTest
 {
-    [TestMethod]
+    [Test]
     public async Task IntType_Diagnostic()
     {
         await VerifyCSType.VerifyAnalyzerAsync(@"
@@ -23,10 +23,10 @@ class Program
         Console.WriteLine(i);
     }
 }
-");
+").ConfigureAwait(false);
     }
 
-    [TestMethod]
+    [Test]
     public async Task InvalidDeclaration_NoDiagnostic()
     {
         await VerifyCSType.VerifyAnalyzerAsync(@"
@@ -40,10 +40,10 @@ class Program
         Console.WriteLine(i++);
     }
 }
-", DiagnosticResult.CompilerError("CS8754").WithSpan(8, 17, 8, 22).WithArguments("new()"));
+", DiagnosticResult.CompilerError("CS8754").WithSpan(8, 17, 8, 22).WithArguments("new()")).ConfigureAwait(false);
     }
 
-    [TestMethod]
+    [Test]
     public async Task EqualsEqualsExpression_Diagnostic()
     {
         await VerifyCSExpression.VerifyAnalyzerAsync(@"
@@ -61,10 +61,10 @@ class Program
             Console.WriteLine(string.Empty);
     }
 }
-");
+").ConfigureAwait(false);
     }
 
-    [TestMethod]
+    [Test]
     public async Task UnknownEqualsEqualsExpression_Diagnostic()
     {
         await VerifyCSExpression.VerifyAnalyzerAsync(@"
@@ -80,10 +80,10 @@ class Program
             Console.WriteLine(string.Empty);
     }
 }
-", DiagnosticResult.CompilerError("CS0103").WithSpan(10, 13, 10, 14).WithArguments("x"));
+", DiagnosticResult.CompilerError("CS0103").WithSpan(10, 13, 10, 14).WithArguments("x")).ConfigureAwait(false);
     }
 
-    [TestMethod]
+    [Test]
     public async Task ExpressionNotApplicable_NoDiagnostic()
     {
         await VerifyCSExpression.VerifyAnalyzerAsync(@"
@@ -101,6 +101,6 @@ class Program
             Console.WriteLine(string.Empty);
     }
 }
-");
+").ConfigureAwait(false);
     }
 }

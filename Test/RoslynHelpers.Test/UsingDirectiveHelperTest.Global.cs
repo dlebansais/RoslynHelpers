@@ -1,12 +1,12 @@
 ﻿namespace RoslynHelpers.Test;
 
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using VerifyCSType = CSharpLatest.Test.CSharpAnalyzerVerifier<TestAnalyzers.TestAnalyzer4>;
 
-public partial class UsingDirectiveHelperTest
+internal partial class UsingDirectiveHelperTest
 {
-    [TestMethod]
+    [Test]
     public async Task NoGlobal_Diagnostic()
     {
         await VerifyCSType.VerifyAnalyzerAsync(@"
@@ -18,10 +18,10 @@ using FileStream = System.IO.FileStream;
 [|class Program
 {
 }|]
-");
+").ConfigureAwait(false);
     }
 
-    [TestMethod]
+    [Test]
     public async Task GlobalSystem_NoDiagnostic()
     {
         await VerifyCSType.VerifyAnalyzerAsync(@"
@@ -32,10 +32,10 @@ using global::System;
 class Program
 {
 }
-");
+").ConfigureAwait(false);
     }
 
-    [TestMethod]
+    [Test]
     public async Task GlobalSystemIo_NoDiagnostic()
     {
         await VerifyCSType.VerifyAnalyzerAsync(@"
@@ -46,6 +46,6 @@ using global::System.IO;
 class Program
 {
 }
-");
+").ConfigureAwait(false);
     }
 }

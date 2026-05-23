@@ -1,15 +1,15 @@
 ﻿namespace RoslynHelpers.Test;
 
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VerifyCSType = CSharpLatest.Test.CSharpAnalyzerVerifier<TestAnalyzers.TestAnalyzer3>;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Testing;
+using NUnit.Framework;
 
-[TestClass]
-public partial class AttributeHelperTest
+[TestFixture]
+internal partial class AttributeHelperTest
 {
-    [TestMethod]
+    [Test]
     public async Task NoAttribute_Diagnostic()
     {
         await VerifyCSType.VerifyAnalyzerAsync(@"
@@ -21,10 +21,10 @@ class Program
     {
     }|]
 }
-");
+").ConfigureAwait(false);
     }
 
-    [TestMethod]
+    [Test]
     public async Task OneAttribute_NoDiagnostic()
     {
         await VerifyCSType.VerifyAnalyzerAsync(@"
@@ -38,10 +38,10 @@ class Program
     {
     }
 }
-");
+").ConfigureAwait(false);
     }
 
-    [TestMethod]
+    [Test]
     public async Task UnknownAttribute_Diagnostic()
     {
         DiagnosticDescriptor DescriptorCS0246_1 = new(
@@ -79,10 +79,10 @@ class Program
     {
     }|]
 }
-", Expected1, Expected2);
+", Expected1, Expected2).ConfigureAwait(false);
     }
 
-    [TestMethod]
+    [Test]
     public async Task UnsupportedAttribute_Diagnostic()
     {
         await VerifyCSType.VerifyAnalyzerAsync(@"
@@ -95,10 +95,10 @@ class Program
     {
     }|]
 }
-");
+").ConfigureAwait(false);
     }
 
-    [TestMethod]
+    [Test]
     public async Task WrongNamespaceAttribute_Diagnostic()
     {
         await VerifyCSType.VerifyAnalyzerAsync(@"
@@ -116,6 +116,6 @@ class Program
     {
     }|]
 }
-");
+").ConfigureAwait(false);
     }
 }

@@ -1,20 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;netstandard2.1;net8.0;net9.0</TargetFrameworks>
-        <LangVersion>13</LangVersion>
+		<TargetFrameworks>netstandard2.0;netstandard2.1;net8.0;net10.0</TargetFrameworks>
+        <LangVersion>14</LangVersion>
         <Nullable>enable</Nullable>
         <Platforms>x64</Platforms>
 
         <RootNamespace>RoslynHelpers</RootNamespace>
-		<Version>2.2.10</Version>
+		<Version>2.2.11</Version>
 		<Authors>David Le Bansais</Authors>
 		<Company />
 		<Product />
 		<Description>A set of helpers to assist Roslyn analyzers</Description>
         <Copyright>Copyright © 2026 David Le Bansais</Copyright>
-        <AssemblyVersion>2.2.10.20</AssemblyVersion>
-		<FileVersion>2.2.10.20</FileVersion>
+        <AssemblyVersion>2.2.11.21</AssemblyVersion>
+		<FileVersion>2.2.11.21</FileVersion>
 		<RepositoryUrl>https://github.com/dlebansais/RoslynHelpers</RepositoryUrl>
         <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
 

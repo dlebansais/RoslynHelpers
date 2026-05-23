@@ -1,8 +1,8 @@
 ﻿namespace RoslynHelpers.Test;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
-[TestClass]
-public partial class OperatorOverloadHelperTest
+[TestFixture]
+internal partial class OperatorOverloadHelperTest
 {
 }
