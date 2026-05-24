@@ -7,14 +7,14 @@
         <Platforms>x64</Platforms>
 
         <RootNamespace>RoslynHelpers</RootNamespace>
-		<Version>2.2.12</Version>
+		<Version>2.2.13</Version>
 		<Authors>David Le Bansais</Authors>
 		<Company />
 		<Product />
 		<Description>A set of helpers to assist Roslyn analyzers</Description>
         <Copyright>Copyright © 2026 David Le Bansais</Copyright>
-        <AssemblyVersion>2.2.12.22</AssemblyVersion>
-		<FileVersion>2.2.12.22</FileVersion>
+        <AssemblyVersion>2.2.13.23</AssemblyVersion>
+		<FileVersion>2.2.13.23</FileVersion>
 		<RepositoryUrl>https://github.com/dlebansais/RoslynHelpers</RepositoryUrl>
         <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
 
@@ -82,8 +82,8 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
 
-        <!-- Only use 5.0.0 until AppVeyor is upgraded -->
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.0.0" />
+        <!-- It has to be 4.12.0 to remain compatible with the lowest version of Roslyn supported by CSharpLatest. -->
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.12.0" />
         <PackageReference Include="dlebansais.Method.Contracts-Debug" Version="2.0.7" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
         <PackageReference Include="dlebansais.Method.Contracts" Version="2.0.7" Condition="'$(Configuration)|$(Platform)'!='Debug|x64'" />
     </ItemGroup>
