@@ -28,6 +28,30 @@ environment:
   report_generator_version: 5.2.0
   PACKAGE_PREFIX: dlebansais
 
+  matrix:
+#    - job_name: Debug
+#      configuration: Debug
+
+    - job_name: Release-4-12-0
+      job_group: Specific-Release-Group
+      configuration: Release-4-12-0
+
+    - job_name: Release-4-14-0
+      job_group: Specific-Release-Group
+      configuration: Release-4-14-0
+
+    - job_name: Release-5-0-0
+      job_group: Specific-Release-Group
+      configuration: Release-5-0-0
+
+    - job_name: Release-5-3-0
+      job_group: Specific-Release-Group
+      configuration: Release-5-3-0
+
+#    - job_name: Release
+#      job_depends_on: Specific-Release-Group
+#      configuration: Release
+
 matrix:
 # set this flag to immediately finish build once one of the jobs fails.
   fast_finish: true
@@ -39,6 +63,18 @@ before_build:
   - dotnet tool install -g dotnet-stryker
 # Extract signing.snk to the current directory. Do not extract for a PR because they don't have access to secrets, but we don't need to sign assemblies in that case.
   - if '%APPVEYOR_PULL_REQUEST_NUMBER%'=='' C:/PROGRA~1/7-Zip/7z.exe e -p%SnkPassword% .signing\key.zip > nul
+# Get artifacts from previous release builds for different versions of the Microsoft.CodeAnalysis package.
+# This step reads artifacts from the PREVIOUS build. Fortunately, that means it works if deploying on a separate deployment branch since it's a second build.
+  - ps: |-
+        if ($env:CONFIGURATION -eq 'Release') { curl -OutFile Release-4-12-0.zip -Headers @{ Authorization = "Bearer $token" } -Uri "https://ci.appveyor.com/api/projects/dlebansais/$env:APPVEYOR_PROJECT_SLUG/artifacts/$env:APPVEYOR_PROJECT_NAME/bin/x64/Release-4-12-0/Release-4-12-0.zip?job=Release%2D4%2D12%2D0" }
+        if ($env:CONFIGURATION -eq 'Release') { curl -OutFile Release-4-14-0.zip -Headers @{ Authorization = "Bearer $token" } -Uri "https://ci.appveyor.com/api/projects/dlebansais/$env:APPVEYOR_PROJECT_SLUG/artifacts/$env:APPVEYOR_PROJECT_NAME/bin/x64/Release-4-14-0/Release-4-14-0.zip?job=Release%2D4%2D14%2D0" }
+        if ($env:CONFIGURATION -eq 'Release') { curl -OutFile Release-5-0-0.zip  -Headers @{ Authorization = "Bearer $token" } -Uri "https://ci.appveyor.com/api/projects/dlebansais/$env:APPVEYOR_PROJECT_SLUG/artifacts/$env:APPVEYOR_PROJECT_NAME/bin/x64/Release-5-0-0/Release-5-0-0.zip?job=Release%2D5%2D0%2D0" }
+        if ($env:CONFIGURATION -eq 'Release') { curl -OutFile Release-5-3-0.zip  -Headers @{ Authorization = "Bearer $token" } -Uri "https://ci.appveyor.com/api/projects/dlebansais/$env:APPVEYOR_PROJECT_SLUG/artifacts/$env:APPVEYOR_PROJECT_NAME/bin/x64/Release-5-3-0/Release-5-3-0.zip?job=Release%2D5%2D3%2D0" }
+  - |-
+    if exist Release-4-12-0.zip C:/PROGRA~1/7-Zip/7z.exe -onuget/lib/netstandard2.0/roslyn4.12 e Release-4-12-0.zip
+    if exist Release-4-14-0.zip C:/PROGRA~1/7-Zip/7z.exe -onuget/lib/netstandard2.0/roslyn4.14 e Release-4-14-0.zip
+    if exist Release-5-0-0.zip  C:/PROGRA~1/7-Zip/7z.exe -onuget/lib/netstandard2.0/roslyn5.0  e Release-5-0-0.zip
+    if exist Release-5-3-0.zip  C:/PROGRA~1/7-Zip/7z.exe -onuget/lib/netstandard2.0/roslyn5.3  e Release-5-3-0.zip
 
 configuration:
   - Release
@@ -71,21 +107,26 @@ before_test:
   - |-
     printf "pushd .\Test\%APPVEYOR_PROJECT_NAME%.Test && dotnet test --test-modules ./bin/x64/%CONFIGURATION%/net10.0/%APPVEYOR_PROJECT_NAME%.Test.dll --output:detailed && popd\n" > run-tests.bat
   - |-
-    printf "@echo ************************************************************** Starting Tests..\n" > run-tests1.bat
+    printf "if ""%CONFIGURATION%"" == ""Release"" goto end\n" > run-tests1.bat
+    printf "@echo ************************************************************** Starting Tests..\n" >> run-tests1.bat
     printf "call run-tests.bat\n" >> run-tests1.bat
+    printf ":end\n" >> run-tests1.bat
   - |-
     printf ".\packages\OpenCover.%opencover_version%\Tools\OpenCover.Console.exe -register:user -returntargetcode -target:\x25\x31 -mergeoutput -output:""Coverage-%APPVEYOR_PROJECT_NAME%.xml""\n" > opencover.bat
   - |-
-    printf ".\packages\CodecovUploader.%codecov_uploader_version%\Tools\Codecov.exe -f ""Coverage-%APPVEYOR_PROJECT_NAME%.xml""\n" > after-test.bat
+    printf "if ""%CONFIGURATION%"" == ""Release"" goto end\n" > after-test.bat
+    printf ".\packages\CodecovUploader.%codecov_uploader_version%\Tools\Codecov.exe -f ""Coverage-%APPVEYOR_PROJECT_NAME%.xml""\n" >> after-test.bat
     printf ".\packages\ReportGenerator.%report_generator_version%\Tools\Net8.0\ReportGenerator.exe ""-reports:Coverage-%APPVEYOR_PROJECT_NAME%.xml"" -targetdir:.\CoverageReports ""-assemblyfilters:-Microsoft*;+%APPVEYOR_PROJECT_NAME%"" ""-filefilters:-*.g.cs"" -reporttypes:textsummary\n" >> after-test.bat
     printf "if not exist .\CoverageReports\Summary.txt exit /b -10\n" >> after-test.bat
     printf "powershell $opencover_summary = Get-Content .\CoverageReports\Summary.txt -Raw ; Write-Output $opencover_summary ; $pattern = 'Branch coverage' + [char]0x003A + ' 100' + [char]0x0025 ; if ($opencover_summary -NotMatch $pattern) { Remove-Item .\CoverageReports\Summary.txt -Force }\n" >> after-test.bat
     printf "if not exist .\CoverageReports\Summary.txt exit /b -11\n" >> after-test.bat
+    printf "if ""%STRYKER_OPTIONS%"" == ""skip"" goto end\n" >> after-test.bat
     printf "cd ./Test/%APPVEYOR_PROJECT_NAME%.Test\n" >> after-test.bat
     printf "dotnet stryker -p %APPVEYOR_PROJECT_NAME%.csproj --configuration:%CONFIGURATION% --output . --reporter ""markdown""\n" >> after-test.bat
     printf "if not exist ./reports/mutation-report.md exit /b -20\n" >> after-test.bat
     printf "powershell $stryker_summary = Get-Content ./reports/mutation-report.md -Raw ; Write-Output $stryker_summary ; $pattern = 'The final mutation score is 100' ; if ($stryker_summary -NotMatch $pattern) { exit -1 }\n" >> after-test.bat
     printf "if not exist ./reports/mutation-report.md exit /b -21\n" >> after-test.bat
+    printf ":end\n" >> after-test.bat
 
 test_script:
   - if '%APPVEYOR_REPO_BRANCH%' == 'master' call opencover.bat run-tests1.bat
@@ -94,6 +135,14 @@ after_test:
   - if '%APPVEYOR_REPO_BRANCH%' == 'master' call after-test.bat
 
 artifacts:
+  - path: $(APPVEYOR_PROJECT_NAME)\bin\x64\Release-4-12-0\netstandard2.0
+    name: Release-4-12-0
+  - path: $(APPVEYOR_PROJECT_NAME)\bin\x64\Release-4-14-0\netstandard2.0
+    name: Release-4-14-0
+  - path: $(APPVEYOR_PROJECT_NAME)\bin\x64\Release-5-0-0\netstandard2.0
+    name: Release-5-0-0
+  - path: $(APPVEYOR_PROJECT_NAME)\bin\x64\Release-5-3-0\netstandard2.0
+    name: Release-5-3-0
   - path: $(PACKAGE_PREFIX).$(APPVEYOR_PROJECT_NAME)-Debug.*.nupkg
     name: $(APPVEYOR_PROJECT_NAME)-Package-Debug
   - path: $(PACKAGE_PREFIX).$(APPVEYOR_PROJECT_NAME).*.nupkg
