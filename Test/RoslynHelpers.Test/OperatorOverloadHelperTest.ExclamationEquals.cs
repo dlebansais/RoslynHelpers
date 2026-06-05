@@ -191,4 +191,23 @@ class Program
 }
 ").ConfigureAwait(false);
     }
+
+    [Test]
+    public async Task GenericExclamationEqualsOperator_Diagnostic()
+    {
+        await VerifyCS.VerifyAnalyzerAsync(@"
+#nullable enable
+
+using System;
+
+class Program<T>
+{
+    static void Main(T item)
+    {
+        if ([|item != null|])
+            Console.WriteLine(string.Empty);
+    }
+}
+").ConfigureAwait(false);
+    }
 }

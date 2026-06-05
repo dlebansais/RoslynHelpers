@@ -44,9 +44,10 @@ public static partial class OperatorOverloadHelper
     private static bool IsOverloadingEqualsOperator(this ITypeSymbol typeSymbol, SyntaxNodeAnalysisContext context, SyntaxKind operatorKind)
     {
         // If the type is a nullable struct.
-        if (!typeSymbol.IsReferenceType && typeSymbol.NullableAnnotation == NullableAnnotation.Annotated)
+        if (!typeSymbol.IsReferenceType &&
+            typeSymbol.NullableAnnotation == NullableAnnotation.Annotated &&
+            typeSymbol is INamedTypeSymbol NamedTypeSymbol)
         {
-            INamedTypeSymbol NamedTypeSymbol = (INamedTypeSymbol)typeSymbol;
             INamedTypeSymbol OriginalDefinition = Contract.AssertNotNull(NamedTypeSymbol.OriginalDefinition);
 
             Contract.Assert(OriginalDefinition.SpecialType == SpecialType.System_Nullable_T);
