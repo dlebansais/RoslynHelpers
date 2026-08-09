@@ -8,14 +8,14 @@
         <Platforms>x64</Platforms>
 
         <RootNamespace>RoslynHelpers</RootNamespace>
-		<Version>2.2.15</Version>
+		<Version>3.0.0</Version>
 		<Authors>David Le Bansais</Authors>
 		<Company />
 		<Product />
 		<Description>A set of helpers to assist Roslyn analyzers</Description>
         <Copyright>Copyright © 2026 David Le Bansais</Copyright>
-        <AssemblyVersion>2.2.15.25</AssemblyVersion>
-		<FileVersion>2.2.15.25</FileVersion>
+        <AssemblyVersion>3.0.0.26</AssemblyVersion>
+		<FileVersion>3.0.0.26</FileVersion>
 		<RepositoryUrl>https://github.com/dlebansais/RoslynHelpers</RepositoryUrl>
         <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
 
@@ -74,11 +74,11 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="dlebansais.Method.Contracts.Analyzers-Debug" Version="2.0.10" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+        <PackageReference Include="dlebansais.Method.Contracts.Analyzers-Debug" Version="3.0.0" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="dlebansais.Method.Contracts.Analyzers" Version="2.0.10" Condition="'$(Configuration)|$(Platform)'!='Debug|x64'">
+        <PackageReference Include="dlebansais.Method.Contracts.Analyzers" Version="3.0.0" Condition="'$(Configuration)|$(Platform)'!='Debug|x64'">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -90,8 +90,8 @@
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.0.0" Condition="'$(Configuration)' == 'Release-5-0-0' Or '$(Configuration)' == 'Debug'" />
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.3.0" Condition="'$(Configuration)' != 'Release-4-12-0' And '$(Configuration)' != 'Release-4-14-0' And '$(Configuration)' != 'Release-5-0-0' And '$(Configuration)' != 'Debug' And '$(Configuration)' != 'Release'" />
 
-        <PackageReference Include="dlebansais.Method.Contracts-Debug" Version="2.0.7" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
-        <PackageReference Include="dlebansais.Method.Contracts" Version="2.0.7" Condition="'$(Configuration)|$(Platform)'!='Debug|x64'" />
+        <PackageReference Include="dlebansais.Method.Contracts-Debug" Version="3.0.0" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+        <PackageReference Include="dlebansais.Method.Contracts" Version="3.0.0" Condition="'$(Configuration)|$(Platform)'!='Debug|x64'" />
     </ItemGroup>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(SolutionDir)'!='*Undefined*'">
