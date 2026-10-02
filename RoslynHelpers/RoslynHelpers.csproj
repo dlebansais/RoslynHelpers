@@ -2,20 +2,20 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>netstandard2.0;netstandard2.1;net10.0</TargetFrameworks>
-        <Configurations>Debug;Release-4-12-0;Release-4-14-0;Release-5-0-0;Release-5-3-0;Release</Configurations>
+        <Configurations>Debug;Release-4-12-0;Release-4-14-0;Release-5-0-0;Release-5-3-0;Release-5-6-0;Release-5-9-0;Release</Configurations>
         <LangVersion>14</LangVersion>
         <Nullable>enable</Nullable>
         <Platforms>x64</Platforms>
 
         <RootNamespace>RoslynHelpers</RootNamespace>
-		<Version>3.0.3</Version>
+		<Version>3.1.0</Version>
 		<Authors>David Le Bansais</Authors>
 		<Company />
 		<Product />
 		<Description>A set of helpers to assist Roslyn analyzers</Description>
         <Copyright>Copyright © 2026 David Le Bansais</Copyright>
-        <AssemblyVersion>3.0.3.29</AssemblyVersion>
-		<FileVersion>3.0.3.29</FileVersion>
+        <AssemblyVersion>3.1.0.30</AssemblyVersion>
+		<FileVersion>3.1.0.30</FileVersion>
 		<RepositoryUrl>https://github.com/dlebansais/RoslynHelpers</RepositoryUrl>
         <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
 
@@ -70,7 +70,7 @@
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.401">
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="5.3.0">
+        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="5.9.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -83,12 +83,14 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
 
-        <!-- Use 5.0.0 for Debug until AppVeyor is updated to 5.3.0 -->
+        <!-- Use 5.0.0 for Debug until AppVeyor is updated to 5.3.0 or later -->
         <!-- Default to 4.12.0 for Release for maximum compatibility -->
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.12.0" Condition="'$(Configuration)' == 'Release-4-12-0' Or '$(Configuration)' == 'Release'" />
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.14.0" Condition="'$(Configuration)' == 'Release-4-14-0'" />
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.0.0" Condition="'$(Configuration)' == 'Release-5-0-0' Or '$(Configuration)' == 'Debug'" />
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.3.0" Condition="'$(Configuration)' != 'Release-4-12-0' And '$(Configuration)' != 'Release-4-14-0' And '$(Configuration)' != 'Release-5-0-0' And '$(Configuration)' != 'Debug' And '$(Configuration)' != 'Release'" />
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.3.0" Condition="'$(Configuration)' == 'Release-5-3-0'" />
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.6.0" Condition="'$(Configuration)' == 'Release-5-6-0'" />
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.9.0" Condition="'$(Configuration)' != 'Release-4-12-0' And '$(Configuration)' != 'Release-4-14-0' And '$(Configuration)' != 'Release-5-0-0' And '$(Configuration)' != 'Release-5-3-0' And '$(Configuration)' != 'Release-5-6-0' And '$(Configuration)' != 'Debug' And '$(Configuration)' != 'Release'" />
 
         <PackageReference Include="dlebansais.Method.Contracts-Debug" Version="3.0.0" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
         <PackageReference Include="dlebansais.Method.Contracts" Version="3.0.0" Condition="'$(Configuration)|$(Platform)'!='Debug|x64'" />
@@ -119,6 +121,8 @@
         <Copy SourceFiles="@(None)" DestinationFolder="$(SolutionDir)nuget\lib\$(TargetFramework)\roslyn4.14\" Condition="'$(Configuration)|$(Platform)' == 'Release-4-14-0|x64'" />
         <Copy SourceFiles="@(None)" DestinationFolder="$(SolutionDir)nuget\lib\$(TargetFramework)\roslyn5.0\" Condition="'$(Configuration)|$(Platform)' == 'Release-5-0-0|x64'" />
         <Copy SourceFiles="@(None)" DestinationFolder="$(SolutionDir)nuget\lib\$(TargetFramework)\roslyn5.3\" Condition="'$(Configuration)|$(Platform)' == 'Release-5-3-0|x64'" />
+        <Copy SourceFiles="@(None)" DestinationFolder="$(SolutionDir)nuget\lib\$(TargetFramework)\roslyn5.6\" Condition="'$(Configuration)|$(Platform)' == 'Release-5-6-0|x64'" />
+        <Copy SourceFiles="@(None)" DestinationFolder="$(SolutionDir)nuget\lib\$(TargetFramework)\roslyn5.9\" Condition="'$(Configuration)|$(Platform)' == 'Release-5-9-0|x64'" />
         <Copy SourceFiles="@(None)" DestinationFolder="$(SolutionDir)nuget\lib\$(TargetFramework)\" Condition="'$(Configuration)|$(Platform)'!='Debug|x64'" />
         <Copy SourceFiles="package-icon.png" DestinationFolder="$(SolutionDir)nuget\" Condition="'$(Configuration)|$(Platform)'!='Debug|x64'" />
         <Copy SourceFiles="README-short.md" DestinationFolder="$(SolutionDir)nuget\" Condition="'$(Configuration)|$(Platform)'!='Debug|x64'" />

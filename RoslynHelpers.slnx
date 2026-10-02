@@ -6,6 +6,8 @@
     <BuildType Name="Release-4-14-0" />
     <BuildType Name="Release-5-0-0" />
     <BuildType Name="Release-5-3-0" />
+    <BuildType Name="Release-5-6-0" />
+    <BuildType Name="Release-5-9-0" />
     <Platform Name="x64" />
   </Configurations>
   <Project Path="RoslynHelpers/RoslynHelpers.csproj">
