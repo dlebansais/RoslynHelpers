@@ -50,6 +50,14 @@ environment:
       job_group: Specific-Release-Group
       configuration: Release-5-3-0
 
+    - job_name: Release-5-6-0
+      job_group: Specific-Release-Group
+      configuration: Release-5-6-0
+
+    - job_name: Release-5-9-0
+      job_group: Specific-Release-Group
+      configuration: Release-5-9-0
+
     - job_name: Release
       job_depends_on: Specific-Release-Group
       configuration: Release
@@ -76,11 +84,15 @@ before_build:
         if ($env:CONFIGURATION -eq 'Release') { curl -OutFile Release-4-14-0.zip -Headers @{ Authorization = "Bearer $token" } -Uri "https://ci.appveyor.com/api/projects/dlebansais/$env:APPVEYOR_PROJECT_SLUG/artifacts/$env:APPVEYOR_PROJECT_NAME/bin/x64/Release-4-14-0/Release-4-14-0.zip?job=Release%2D4%2D14%2D0" }
         if ($env:CONFIGURATION -eq 'Release') { curl -OutFile Release-5-0-0.zip  -Headers @{ Authorization = "Bearer $token" } -Uri "https://ci.appveyor.com/api/projects/dlebansais/$env:APPVEYOR_PROJECT_SLUG/artifacts/$env:APPVEYOR_PROJECT_NAME/bin/x64/Release-5-0-0/Release-5-0-0.zip?job=Release%2D5%2D0%2D0" }
         if ($env:CONFIGURATION -eq 'Release') { curl -OutFile Release-5-3-0.zip  -Headers @{ Authorization = "Bearer $token" } -Uri "https://ci.appveyor.com/api/projects/dlebansais/$env:APPVEYOR_PROJECT_SLUG/artifacts/$env:APPVEYOR_PROJECT_NAME/bin/x64/Release-5-3-0/Release-5-3-0.zip?job=Release%2D5%2D3%2D0" }
+        if ($env:CONFIGURATION -eq 'Release') { curl -OutFile Release-5-6-0.zip  -Headers @{ Authorization = "Bearer $token" } -Uri "https://ci.appveyor.com/api/projects/dlebansais/$env:APPVEYOR_PROJECT_SLUG/artifacts/$env:APPVEYOR_PROJECT_NAME/bin/x64/Release-5-6-0/Release-5-6-0.zip?job=Release%2D5%2D6%2D0" }
+        if ($env:CONFIGURATION -eq 'Release') { curl -OutFile Release-5-9-0.zip  -Headers @{ Authorization = "Bearer $token" } -Uri "https://ci.appveyor.com/api/projects/dlebansais/$env:APPVEYOR_PROJECT_SLUG/artifacts/$env:APPVEYOR_PROJECT_NAME/bin/x64/Release-5-9-0/Release-5-9-0.zip?job=Release%2D5%2D9%2D0" }
   - |-
     if exist Release-4-12-0.zip C:/PROGRA~1/7-Zip/7z.exe -onuget/lib/netstandard2.0/roslyn4.12 e Release-4-12-0.zip
     if exist Release-4-14-0.zip C:/PROGRA~1/7-Zip/7z.exe -onuget/lib/netstandard2.0/roslyn4.14 e Release-4-14-0.zip
     if exist Release-5-0-0.zip  C:/PROGRA~1/7-Zip/7z.exe -onuget/lib/netstandard2.0/roslyn5.0  e Release-5-0-0.zip
     if exist Release-5-3-0.zip  C:/PROGRA~1/7-Zip/7z.exe -onuget/lib/netstandard2.0/roslyn5.3  e Release-5-3-0.zip
+    if exist Release-5-6-0.zip  C:/PROGRA~1/7-Zip/7z.exe -onuget/lib/netstandard2.0/roslyn5.6  e Release-5-6-0.zip
+    if exist Release-5-9-0.zip  C:/PROGRA~1/7-Zip/7z.exe -onuget/lib/netstandard2.0/roslyn5.9  e Release-5-9-0.zip
 
 build:
   project: $(APPVEYOR_PROJECT_NAME).slnx
@@ -143,6 +155,10 @@ artifacts:
     name: Release-5-0-0
   - path: $(APPVEYOR_PROJECT_NAME)\bin\x64\Release-5-3-0\netstandard2.0
     name: Release-5-3-0
+  - path: $(APPVEYOR_PROJECT_NAME)\bin\x64\Release-5-6-0\netstandard2.0
+    name: Release-5-6-0
+  - path: $(APPVEYOR_PROJECT_NAME)\bin\x64\Release-5-9-0\netstandard2.0
+    name: Release-5-9-0
   - path: $(PACKAGE_PREFIX).$(APPVEYOR_PROJECT_NAME)-Debug.*.nupkg
     name: $(APPVEYOR_PROJECT_NAME)-Package-Debug
   - path: $(PACKAGE_PREFIX).$(APPVEYOR_PROJECT_NAME).*.nupkg
